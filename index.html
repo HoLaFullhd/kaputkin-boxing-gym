@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kaputkin Boxing Gym — Онлайн Бокс</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --panel: #151923;
+    --panel2: #1d2332;
+    --border: #2c354b;
+    --accent: #ef4444;
+    --accent-hover: #dc2626;
+    --gold: #f59e0b;
+    --blue: #3b82f6;
+    --green: #10b981;
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  .hidden { display: none !important; }
+
+  /* AUTH SCREEN */
+  #auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: radial-gradient(circle at top, #1f1418 0%, #0b0d12 70%);
+  }
+  .auth-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+  .brand-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ef4444, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .brand-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 22px;
+  }
+  .input-group { margin-bottom: 14px; }
+  .input-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    color: #fff;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+  .btn-secondary { background: var(--panel2); border: 1px solid var(--border); margin-top: 10px; }
+  .btn-gold { background: linear-gradient(135deg, #f59e0b, #b45309); color: #fff; }
+  .btn-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .btn-green { background: linear-gradient(135deg, #10b981, #047857); }
+  .auth-msg {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #f87171;
+    min-height: 18px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .player-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .avatar-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ef4444, #f59e0b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+  }
+  .p-name { font-weight: 700; font-size: 14px; }
+  .p-record { font-size: 11px; color: var(--muted); }
+  .currency-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .stat-tag {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .gold-txt { color: var(--gold); }
+  .elo-txt { color: #60a5fa; }
+
+  /* NAV TABS */
+  nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 11px 4px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-btn.active {
+    color: #fff;
+    border-bottom-color: var(--accent);
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  /* MAIN CONTAINER */
+  main {
+    flex: 1;
+    padding: 14px;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 30px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  /* DIVISION FILTER */
+  .div-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  .div-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .div-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* OPPONENT LIST & PVP */
+  .opp-item {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .opp-info { flex: 1; }
+  .opp-info h4 { font-size: 15px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .opp-nick { color: var(--gold); font-size: 12px; font-weight: 700; }
+  .opp-info p { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .mini-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .ms-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 11px;
+    color: #e5e7eb;
+    font-weight: 600;
+  }
+  .opp-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--green);
+    font-weight: 700;
+  }
+  .btn-sm {
+    padding: 9px 14px;
+    font-size: 13px;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  /* GYM UPGRADES */
+  .stat-row {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stat-bar-bg {
+    width: 120px;
+    height: 7px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444, #f59e0b);
+  }
+
+  /* SHOP (PURE STYLE) */
+  .shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .shop-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .shop-card.equipped { border-color: var(--green); }
+  .gear-preview {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 2px solid rgba(255,255,255,0.25);
+  }
+
+  /* CHAT */
+  .chat-box {
+    height: 280px;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chat-msg { font-size: 13px; line-height: 1.35; }
+  .chat-msg b { color: #60a5fa; }
+  .chat-msg.sys { color: var(--gold); font-style: italic; }
+  .chat-form { display: flex; gap: 8px; }
+
+  /* FIGHT ARENA OVERLAY */
+  #fight-screen {
+    position: fixed;
+    inset: 0;
+    background: #07090d;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .fight-hud {
+    padding: 10px 12px;
+    background: linear-gradient(180deg, rgba(11,13,18,0.95) 0%, rgba(11,13,18,0.6) 100%);
+    z-index: 5;
+  }
+  .hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .round-box {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 3px 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .round-num { font-size: 11px; color: var(--gold); font-weight: 800; }
+  .round-time { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .bars-grid {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+  .fighter-hud-name {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .bar-wrap {
+    height: 12px;
+    background: #1f2430;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    border: 1px solid #2e3648;
+  }
+  .hp-fill { height: 100%; background: linear-gradient(90deg, #dc2626, #22c55e); transition: width 0.12s; }
+  .hp-fill.enemy { background: linear-gradient(90deg, #22c55e, #dc2626); float: right; }
+  .sub-bars {
+    display: flex;
+    gap: 4px;
+  }
+  .mini-wrap {
+    flex: 1;
+    height: 6px;
+    background: #181c26;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stam-fill { height: 100%; background: #eab308; transition: width 0.1s; }
+  .blk-fill { height: 100%; background: #38bdf8; transition: width 0.1s; }
+
+  /* CANVAS */
+  #ring-wrap {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  canvas#ringCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  #banner-overlay {
+    position: absolute;
+    top: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+    pointer-events: none;
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  #banner-overlay.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  /* KNOCKDOWN MINIGAME */
+  #kd-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 25;
+    padding: 20px;
+  }
+  .kd-count {
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 25px rgba(239,68,68,0.8);
+  }
+  .kd-track {
+    width: 280px;
+    height: 26px;
+    background: #1e293b;
+    border-radius: 13px;
+    border: 2px solid #475569;
+    position: relative;
+    margin: 18px 0;
+    overflow: hidden;
+  }
+  .kd-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(16, 185, 129, 0.55);
+    border-left: 2px solid #10b981;
+    border-right: 2px solid #10b981;
+  }
+  .kd-cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background: #fff;
+    box-shadow: 0 0 8px #fff;
+  }
+
+  /* FIGHT CONTROLS */
+  .controls-deck {
+    background: #10141d;
+    border-top: 1px solid var(--border);
+    padding: 10px;
+    z-index: 10;
+  }
+  .ctrl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .act-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 4px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .act-btn span.sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .act-btn:active, .act-btn.pressed {
+    transform: scale(0.95);
+    border-color: var(--gold);
+    background: #283147;
+  }
+  .act-btn.def { border-color: #2563eb; background: rgba(37, 99, 235, 0.14); }
+  .act-btn.dodge { border-color: #10b981; background: rgba(16, 185, 129, 0.14); }
+  .act-btn.heavy { border-color: #ef4444; background: rgba(239, 68, 68, 0.14); }
+
+  /* RESULT MODAL */
+  #result-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .res-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+  .res-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+  .res-sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+  .res-rewards {
+    background: var(--panel2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="brand-title">Kaputkin Boxing Gym</div>
+    <div class="brand-sub">Онлайн симулятор бокса • v1.1</div>
+    <div class="input-group">
+      <label>Никнейм бойца</label>
+      <input type="text" id="auth-login" placeholder="Например: Tyson_2026" maxlength="16">
+    </div>
+    <div class="input-group">
+      <label>Пароль</label>
+      <input type="password" id="auth-pass" placeholder="Минимум 4 символа" maxlength="24">
+    </div>
+    <button class="btn btn-primary" onclick="handleAuth('login')">Войти в зал</button>
+    <button class="btn btn-secondary" onclick="handleAuth('register')">Создать нового бойца</button>
+    <div class="auth-msg" id="auth-msg"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-screen" class="hidden">
+  <header>
+    <div class="player-pill">
+      <div class="avatar-badge" id="hdr-avatar">K</div>
+      <div>
+        <div class="p-name" id="hdr-name">Боец</div>
+        <div class="p-record" id="hdr-record">0W - 0L (0 KO)</div>
+      </div>
+    </div>
+    <div class="currency-box">
+      <div class="stat-tag gold-txt">💵 <span id="hdr-money">0</span></div>
+      <div class="stat-tag elo-txt">🏆 <span id="hdr-elo">1000</span></div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('career', this)">🥊 Бойцы</button>
+    <button class="nav-btn" onclick="switchTab('pvp', this)">🌐 Онлайн</button>
+    <button class="nav-btn" onclick="switchTab('gym', this)">🏋️ Зал</button>
+    <button class="nav-btn" onclick="switchTab('shop', this)">🎨 Стиль</button>
+    <button class="nav-btn" onclick="switchTab('social', this)">💬 Топ/Чат</button>
+  </nav>
+
+  <main>
+    <!-- TAB: CAREER / REAL BOXERS -->
+    <div id="tab-career" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Мировой ростер бокса</span>
+          <span style="font-size:12px;color:var(--muted)" id="roster-count">16 бойцов</span>
+        </div>
+        <div class="div-tabs" id="div-tabs">
+          <button class="div-btn active" onclick="filterDivision('all', this)">Все (16)</button>
+          <button class="div-btn" onclick="filterDivision('light', this)">Лёгкий / Полусредний</button>
+          <button class="div-btn" onclick="filterDivision('middle', this)">Средний / Полутяж</button>
+          <button class="div-btn" onclick="filterDivision('heavy', this)">Тяжёлый дивизион</button>
+          <button class="div-btn" onclick="filterDivision('legend', this)">Легенды ринга</button>
+        </div>
+        <div id="ai-list"></div>
+      </div>
+      <div class="card" style="font-size:12px;color:var(--muted);line-height:1.5">
+        <b style="color:#fff">Тактика против профи:</b><br>
+        • Против <b>нокаутеров</b> (Тайсон, Уайлдер, Бетербиев) держи дистанцию джебом и лови на отклон.<br>
+        • Против <b>игровиков</b> (Мейвезер, Усик, Ломаченко) работай по корпусу, чтобы сбить им темп.<br>
+        • <b>Апперкот</b> наносит крит ×1.65, если соперник нырнул вниз.
+      </div>
+    </div>
+
+    <!-- TAB: PVP ONLINE -->
+    <div id="tab-pvp" class="tab-pane hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>Онлайн Ринг (PvP 1 на 1)</span>
+          <span id="pvp-status-dot" style="font-size:12px;color:var(--green)">● Сеть активна</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
+          Победа решается только твоей прокачкой в зале и таймингами — экипировка чисто визуальная!
+        </p>
+        <div id="pvp-host-box">
+          <button class="btn btn-primary" onclick="createPvpRoom()">🔥 Бросить вызов (Создать комнату)</button>
+        </div>
+        <div id="pvp-waiting-box" class="hidden" style="text-align:center;padding:12px;background:var(--panel2);border-radius:10px;margin-top:8px">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px">⏳ Ожидание соперника на ринге...</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Другой игрок увидит твой вызов в списке ниже</div>
+          <button class="btn btn-secondary btn-sm" onclick="cancelPvpRoom()">Отменить вызов</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Открытые вызовы</span>
+          <button class="btn btn-secondary btn-sm" style="padding:4px 10px;font-size:11px" onclick="loadPvpRooms()">Обновить</button>
+        </div>
+        <div id="pvp-rooms-list">
+          <p style="color:var(--muted);font-size:13px">Загрузка списка боев...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: GYM -->
+    <div id="tab-gym" class="tab-pane hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>Тренировочный зал Капуткина</span>
+          <span style="font-size:12px;color:var(--gold)">Баланс: <span id="gym-money">0</span> $</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">
+          Единственный способ стать сильнее — пахать в зале. Все характеристики растут от тренировок.
+        </p>
+        <div id="gym-stats-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB: COSMETIC WARDROBE -->
+    <div id="tab-shop" class="tab-pane hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>Перчатки</span>
+          <span style="font-size:11px;color:var(--muted)">Только внешний вид</span>
+        </div>
+        <div class="shop-grid" id="shop-gloves"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <span>Боксерские шорты</span>
+          <span style="font-size:11px;color:var(--muted)">Только внешний вид</span>
+        </div>
+        <div class="shop-grid" id="shop-shorts"></div>
+      </div>
+    </div>
+
+    <!-- TAB: SOCIAL (LEADERBOARD & CHAT) -->
+    <div id="tab-social" class="tab-pane hidden">
+      <div class="card">
+        <div class="card-title"><span>🏆 Топ бойцов зала (ELO)</span></div>
+        <div id="leaderboard-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>💬 Чат раздевалки</span></div>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-form">
+          <input type="text" id="chat-input" placeholder="Написать в чат зала..." maxlength="120" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="btn btn-blue btn-sm" onclick="sendChat()">Отпр.</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary" onclick="logout()">Выйти из аккаунта</button>
+    </div>
+  </main>
+</div>
+
+<!-- FIGHT SCREEN -->
+<div id="fight-screen" class="hidden">
+  <div class="fight-hud">
+    <div class="hud-top">
+      <button class="btn btn-secondary btn-sm" style="padding:4px 10px;font-size:11px" onclick="surrenderFight()">🏳️ Сдаться</button>
+      <div class="round-box">
+        <div class="round-num" id="hud-round">РАУНД 1 / 3</div>
+        <div class="round-time" id="hud-timer">01:30</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:right" id="hud-mode">СПАРРИНГ</div>
+    </div>
+
+    <div class="bars-grid">
+      <!-- PLAYER BARS -->
+      <div>
+        <div class="fighter-hud-name">
+          <span id="hud-p1-name">Ты</span>
+          <span id="hud-p1-hp-txt">100%</span>
+        </div>
+        <div class="bar-wrap"><div class="hp-fill" id="hud-p1-hp" style="width:100%"></div></div>
+        <div class="sub-bars">
+          <div class="mini-wrap" title="Выносливость"><div class="stam-fill" id="hud-p1-stam" style="width:100%"></div></div>
+          <div class="mini-wrap" title="Прочность блока"><div class="blk-fill" id="hud-p1-blk" style="width:100%"></div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;font-weight:900;font-size:12px;color:var(--accent)">VS</div>
+
+      <!-- ENEMY BARS -->
+      <div>
+        <div class="fighter-hud-name">
+          <span id="hud-p2-hp-txt">100%</span>
+          <span id="hud-p2-name">Соперник</span>
+        </div>
+        <div class="bar-wrap"><div class="hp-fill enemy" id="hud-p2-hp" style="width:100%"></div></div>
+        <div class="sub-bars">
+          <div class="mini-wrap"><div class="blk-fill" id="hud-p2-blk" style="width:100%"></div></div>
+          <div class="mini-wrap"><div class="stam-fill" id="hud-p2-stam" style="width:100%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ring-wrap">
+    <canvas id="ringCanvas"></canvas>
+    <div id="banner-overlay">FIGHT!</div>
+
+    <!-- KNOCKDOWN MINIGAME -->
+    <div id="kd-modal" class="hidden">
+      <div style="font-size:18px;font-weight:800;letter-spacing:1px;color:#fff">НОКДАУН! ВСТАВАЙ!</div>
+      <div class="kd-count" id="kd-number">1</div>
+      <div class="kd-track">
+        <div class="kd-zone" id="kd-zone" style="left:38%;width:24%"></div>
+        <div class="kd-cursor" id="kd-cursor" style="left:0%"></div>
+      </div>
+      <button class="btn btn-green" style="max-width:260px;font-size:18px" onclick="tryStandUp()">ПОДНЯТЬСЯ!</button>
+    </div>
+  </div>
+
+  <div class="controls-deck">
+    <div class="ctrl-grid">
+      <button class="act-btn" onclick="playerAction('jab')">
+        👊 ДЖЕБ
+        <span class="sub">Быстрый (Q)</span>
+      </button>
+      <button class="act-btn" onclick="playerAction('cross')">
+        💥 КРОСС
+        <span class="sub">Прямой (W)</span>
+      </button>
+      <button class="act-btn heavy" onclick="playerAction('hook')">
+        🪝 ХУК
+        <span class="sub">Пробой (E)</span>
+      </button>
+      <button class="act-btn heavy" onclick="playerAction('uppercut')">
+        🚀 АППЕРКОТ
+        <span class="sub">Крит (R)</span>
+      </button>
+
+      <button class="act-btn" onclick="playerAction('body')">
+        🫁 В КОРПУС
+        <span class="sub">-Стамина (A)</span>
+      </button>
+      <button class="act-btn def" id="btn-block"
+        onmousedown="setBlock(true)" onmouseup="setBlock(false)" onmouseleave="setBlock(false)"
+        ontouchstart="event.preventDefault();setBlock(true)" ontouchend="event.preventDefault();setBlock(false)">
+        🛡️ БЛОК
+        <span class="sub">Удерж. (S)</span>
+      </button>
+      <button class="act-btn dodge" onclick="playerAction('lean')">
+        ↩️ ОТКЛОН
+        <span class="sub">Назад (D)</span>
+      </button>
+      <button class="act-btn dodge" onclick="playerAction('duck')">
+        ⬇️ НЫРОК
+        <span class="sub">Вниз (F)</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="result-modal" class="hidden">
+  <div class="res-card">
+    <div class="res-title" id="res-title">ПОБЕДА!</div>
+    <div class="res-sub" id="res-sub">Нокаут во 2 раунде</div>
+    <div class="res-rewards" id="res-rewards">+250 $ • +15 ELO</div>
+    <button class="btn btn-primary" onclick="closeResult()">Вернуться в зал</button>
+  </div>
+</div>
+
+<script>
+const DB_URL = "https://kaputkin-boxing-gym-default-rtdb.europe-west1.firebasedatabase.app";
+
+// --- REAL WORLD BOXERS ROSTER (16 FIGHTERS) ---
+const REAL_BOXERS = [
+  // LIGHT / WELTERWEIGHT
+  {
+    id: 'garcia', div: 'light', name: 'Райан Гарсия', nick: 'KingRy',
+    style: 'Взрывной левый хук, высокая скорость рук, слабая защита',
+    aiTendency: 'hooker', skin: '#e0a37b', hair: '#1f2937',
+    hp: 95, power: 11, speed: 1.25, stam: 95, chin: 8, reward: 130,
+    color: '#ffffff', gloves: '#ef4444'
+  },
+  {
+    id: 'haney', div: 'light', name: 'Девин Хейни', nick: 'The Dream',
+    style: 'Длинный джеб, осторожный бокс с дистанции и клинч-блок',
+    aiTendency: 'outboxer', skin: '#7c4d34', hair: '#111827',
+    hp: 105, power: 9, speed: 1.22, stam: 125, chin: 9, reward: 175,
+    color: '#10b981', gloves: '#f8fafc'
+  },
+  {
+    id: 'davis', div: 'light', name: 'Джервонта Дэвис', nick: 'Tank',
+    style: 'Компактный нокаутер: апперкоты, нырки и смертельный левый кросс',
+    aiTendency: 'counter_puncher', skin: '#6b422b', hair: '#111827',
+    hp: 120, power: 16, speed: 1.28, stam: 115, chin: 12, reward: 240,
+    color: '#111827', gloves: '#f59e0b'
+  },
+  {
+    id: 'lomachenko', div: 'light', name: 'Василий Ломаченко', nick: 'Loma',
+    style: 'Невероятные углы атак, темповые серии джебов и уклоны',
+    aiTendency: 'technician', skin: '#e6b08a', hair: '#374151',
+    hp: 125, power: 12, speed: 1.48, stam: 155, chin: 13, reward: 300,
+    color: '#2563eb', gloves: '#eab308'
+  },
+  {
+    id: 'crawford', div: 'light', name: 'Теренс Кроуфорд', nick: 'Bud',
+    style: 'Универсал-убийца: жесткие контр-атаки и добивание по этажам',
+    aiTendency: 'counter_puncher', skin: '#6e452e', hair: '#111827',
+    hp: 145, power: 17, speed: 1.38, stam: 150, chin: 15, reward: 390,
+    color: '#dc2626', gloves: '#111827'
+  },
+
+  // MIDDLE / LIGHT HEAVYWEIGHT
+  {
+    id: 'canelo', div: 'middle', name: 'Сауль Альварес', nick: 'Canelo',
+    style: 'Железный блок, уклоны корпусом и сокрушительные удары по печени',
+    aiTendency: 'body_snatcher', skin: '#e8b490', hair: '#b45309',
+    hp: 165, power: 19, speed: 1.24, stam: 155, chin: 20, reward: 480,
+    color: '#047857', gloves: '#f59e0b'
+  },
+  {
+    id: 'golovkin', div: 'middle', name: 'Геннадий Головкин', nick: 'GGG',
+    style: 'Бетонный подбородок, тяжелый джеб и постоянный прессинг',
+    aiTendency: 'pressure', skin: '#e6b08a', hair: '#1f2937',
+    hp: 180, power: 21, speed: 1.12, stam: 165, chin: 24, reward: 560,
+    color: '#1d4ed8', gloves: '#ef4444'
+  },
+  {
+    id: 'bivol', div: 'middle', name: 'Дмитрий Бивол', nick: 'Precision',
+    style: 'Идеальный челнок, серийные двойки и строгая защита',
+    aiTendency: 'outboxer', skin: '#e8b896', hair: '#1f2937',
+    hp: 175, power: 17, speed: 1.42, stam: 185, chin: 18, reward: 640,
+    color: '#f8fafc', gloves: '#dc2626'
+  },
+  {
+    id: 'beterbiev', div: 'middle', name: 'Артур Бетербиев', nick: '100% KO',
+    style: 'Ломает блок тяжелыми хуками и апперкотами с обеих рук',
+    aiTendency: 'pressure', skin: '#e0a882', hair: '#111827',
+    hp: 190, power: 25, speed: 1.15, stam: 175, chin: 20, reward: 740,
+    color: '#991b1b', gloves: '#111827'
+  },
+
+  // HEAVYWEIGHT
+  {
+    id: 'wilder', div: 'heavy', name: 'Деонтей Уайлдер', nick: 'Bronze Bomber',
+    style: 'Правый кросс-пушка: может перевернуть бой одним попаданием',
+    aiTendency: 'sniper', skin: '#5c3824', hair: '#111827',
+    hp: 185, power: 29, speed: 1.18, stam: 145, chin: 15, reward: 820,
+    color: '#b45309', gloves: '#f59e0b'
+  },
+  {
+    id: 'joshua', div: 'heavy', name: 'Энтони Джошуа', nick: 'AJ',
+    style: 'Классическая школа тяжеловеса: мощные двойки и апперкот',
+    aiTendency: 'balanced', skin: '#69402a', hair: '#111827',
+    hp: 205, power: 24, speed: 1.16, stam: 165, chin: 17, reward: 900,
+    color: '#1e3a8a', gloves: '#f8fafc'
+  },
+  {
+    id: 'fury', div: 'heavy', name: 'Тайсон Фьюри', nick: 'Gypsy King',
+    style: 'Неудобный гигант: постоянные отклоны, длинный джеб и выносливость',
+    aiTendency: 'outboxer', skin: '#ecc0a1', hair: '#4b5563',
+    hp: 225, power: 22, speed: 1.28, stam: 205, chin: 22, reward: 1050,
+    color: '#15803d', gloves: '#dc2626'
+  },
+  {
+    id: 'usyk', div: 'heavy', name: 'Александр Усик', nick: 'The Cat',
+    style: 'Бешеный темп все раунды, работа по корпусу и идеальный тайминг уклонов',
+    aiTendency: 'technician', skin: '#e6b08a', hair: '#374151',
+    hp: 220, power: 21, speed: 1.48, stam: 230, chin: 21, reward: 1200,
+    color: '#1d4ed8', gloves: '#eab308'
+  },
+
+  // LEGENDS OF BOXING
+  {
+    id: 'mayweather', div: 'legend', name: 'Флойд Мейвезер', nick: 'Money',
+    style: 'Неуловимая защита (Philly Shell), быстрые контр-джебы и кроссы',
+    aiTendency: 'counter_puncher', skin: '#7c4d34', hair: '#111827',
+    hp: 200, power: 19, speed: 1.62, stam: 220, chin: 20, reward: 1350,
+    color: '#047857', gloves: '#f59e0b'
+  },
+  {
+    id: 'ali', div: 'legend', name: 'Мохаммед Али', nick: 'The Greatest',
+    style: 'Порхает как бабочка: молниеносные отклоны и серии джебов',
+    aiTendency: 'outboxer', skin: '#75472f', hair: '#111827',
+    hp: 240, power: 23, speed: 1.58, stam: 245, chin: 25, reward: 1600,
+    color: '#f8fafc', gloves: '#dc2626'
+  },
+  {
+    id: 'tyson', div: 'legend', name: 'Майк Тайсон (Пик)', nick: 'Iron Mike',
+    style: 'Стиль Пик-а-Бу: нырки и взрывные хуки + апперкоты с чудовищной силой',
+    aiTendency: 'peekaboo', skin: '#633c26', hair: '#111827',
+    hp: 255, power: 33, speed: 1.52, stam: 215, chin: 24, reward: 2000,
+    color: '#111827', gloves: '#111827'
+  }
+];
+
+// --- COSMETIC ONLY GEAR (ZERO STAT ADVANTAGE) ---
+const GLOVES_SHOP = [
+  { id: 'g_red', name: 'Классика (Красные)', price: 0, color: '#dc2626' },
+  { id: 'g_blue', name: 'Синий угол', price: 200, color: '#2563eb' },
+  { id: 'g_white', name: 'Белый шелк', price: 350, color: '#f8fafc' },
+  { id: 'g_gold', name: 'Золотой металлик', price: 600, color: '#f59e0b' },
+  { id: 'g_green', name: 'Изумрудный неон', price: 800, color: '#10b981' },
+  { id: 'g_black', name: 'Черный матовый', price: 1000, color: '#111827' }
+];
+
+const SHORTS_SHOP = [
+  { id: 's_dark', name: 'Угольные', price: 0, color: '#1f2937' },
+  { id: 's_red', name: 'Алый атлас', price: 200, color: '#b91c1c' },
+  { id: 's_blue', name: 'Королевский синий', price: 350, color: '#1d4ed8' },
+  { id: 's_white', name: 'Белоснежные', price: 500, color: '#e5e7eb' },
+  { id: 's_emerald', name: 'Мексиканский зеленый', price: 750, color: '#047857' },
+  { id: 's_gold', name: 'Чемпионское золото', price: 1000, color: '#d97706' }
+];
+
+// --- USER STATE ---
+let user = null;
+let currentDivFilter = 'all';
+let pvpRoomId = null;
+let pvpRole = null;
+let pvpPollTimer = null;
+let pvpLastEnemyActionId = 0;
+let chatPollTimer = null;
+
+function defaultUserData(name, pass) {
+  return {
+    name,
+    pass,
+    money: 150,
+    elo: 1000,
+    wins: 0,
+    losses: 0,
+    kos: 0,
+    stats: { power: 1, speed: 1, stamina: 1, chin: 1 },
+    ownedGloves: ['g_red'],
+    ownedShorts: ['s_dark'],
+    eqGloves: 'g_red',
+    eqShorts: 's_dark'
+  };
+}
+
+// --- FIREBASE REST HELPERS ---
+async function fbGet(path) {
+  const res = await fetch(`${DB_URL}/${path}.json`);
+  return await res.json();
+}
+async function fbPut(path, data) {
+  const res = await fetch(`${DB_URL}/${path}.json`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+}
+async function fbPatch(path, data) {
+  const res = await fetch(`${DB_URL}/${path}.json`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+}
+async function fbPost(path, data) {
+  const res = await fetch(`${DB_URL}/${path}.json`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+}
+async function fbDelete(path) {
+  await fetch(`${DB_URL}/${path}.json`, { method: 'DELETE' });
+}
+
+// --- AUTH ---
+function sanitizeKey(str) {
+  return str.trim().toLowerCase().replace(/[^a-zа-я0-9_-]/gi, '');
+}
+
+async function handleAuth(mode) {
+  const rawName = document.getElementById('auth-login').value.trim();
+  const pass = document.getElementById('auth-pass').value.trim();
+  const msg = document.getElementById('auth-msg');
+  msg.style.color = '#f87171';
+
+  if (rawName.length < 3 || pass.length < 4) {
+    msg.textContent = 'Ник от 3 символов, пароль от 4 символов';
+    return;
+  }
+  const key = sanitizeKey(rawName);
+  if (!key) {
+    msg.textContent = 'Недопустимые символы в нике';
+    return;
+  }
+
+  msg.style.color = '#fbbf24';
+  msg.textContent = 'Подключение к залу...';
+
+  try {
+    const existing = await fbGet(`players/${key}`);
+    if (mode === 'register') {
+      if (existing) {
+        msg.style.color = '#f87171';
+        msg.textContent = 'Этот ник уже занят!';
+        return;
+      }
+      user = defaultUserData(rawName, pass);
+      user.key = key;
+      await fbPut(`players/${key}`, user);
+      await syncLeaderboard();
+      await postSystemChat(`🥊 Новый боец ${rawName} вошел в Kaputkin Boxing Gym!`);
+    } else {
+      if (!existing || existing.pass !== pass) {
+        msg.style.color = '#f87171';
+        msg.textContent = 'Неверный никнейм или пароль';
+        return;
+      }
+      user = existing;
+      user.key = key;
+      // Migrate old v1.0 gear IDs if needed
+      if (!GLOVES_SHOP.some(g => g.id === user.eqGloves)) user.eqGloves = 'g_red';
+      if (!SHORTS_SHOP.some(s => s.id === user.eqShorts)) user.eqShorts = 's_dark';
+      if (!user.ownedGloves.includes('g_red')) user.ownedGloves.push('g_red');
+      if (!user.ownedShorts.includes('s_dark')) user.ownedShorts.push('s_dark');
+    }
+    localStorage.setItem('kbg_session', JSON.stringify({ key, pass }));
+    enterApp();
+  } catch (e) {
+    msg.style.color = '#f87171';
+    msg.textContent = 'Ошибка сети Firebase. Проверь интернет.';
+  }
+}
+
+async function autoLogin() {
+  const saved = localStorage.getItem('kbg_session');
+  if (!saved) return;
+  try {
+    const { key, pass } = JSON.parse(saved);
+    const existing = await fbGet(`players/${key}`);
+    if (existing && existing.pass === pass) {
+      user = existing;
+      user.key = key;
+      if (!GLOVES_SHOP.some(g => g.id === user.eqGloves)) user.eqGloves = 'g_red';
+      if (!SHORTS_SHOP.some(s => s.id === user.eqShorts)) user.eqShorts = 's_dark';
+      enterApp();
+    }
+  } catch (e) {}
+}
+
+function logout() {
+  localStorage.removeItem('kbg_session');
+  location.reload();
+}
+
+async function saveUser() {
+  if (!user) return;
+  await fbPut(`players/${user.key}`, user);
+  await syncLeaderboard();
+  updateHeader();
+}
+
+async function syncLeaderboard() {
+  if (!user) return;
+  await fbPut(`leaderboard/${user.key}`, {
+    name: user.name,
+    elo: user.elo,
+    wins: user.wins,
+    losses: user.losses,
+    kos: user.kos
+  });
+}
+
+// --- UI NAVIGATION & RENDER ---
+function enterApp() {
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app-screen').classList.remove('hidden');
+  updateHeader();
+  renderCareer();
+  renderGym();
+  renderShop();
+  loadLeaderboard();
+  loadChat();
+  chatPollTimer = setInterval(() => {
+    if (!document.getElementById('tab-social').classList.contains('hidden')) {
+      loadChat();
+    }
+    if (!document.getElementById('tab-pvp').classList.contains('hidden') && !fight.active) {
+      checkPvpLobbyState();
+    }
+  }, 2500);
+}
+
+function updateHeader() {
+  document.getElementById('hdr-avatar').textContent = user.name[0].toUpperCase();
+  document.getElementById('hdr-name').textContent = user.name;
+  document.getElementById('hdr-record').textContent = `${user.wins}W - ${user.losses}L (${user.kos} KO)`;
+  document.getElementById('hdr-money').textContent = user.money;
+  document.getElementById('hdr-elo').textContent = user.elo;
+  document.getElementById('gym-money').textContent = user.money;
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+
+  if (tab === 'pvp') loadPvpRooms();
+  if (tab === 'gym') renderGym();
+  if (tab === 'shop') renderShop();
+  if (tab === 'social') { loadLeaderboard(); loadChat(); }
+}
+
+// Pure Gym Stats (Zero gear stat bonuses!)
+function getPlayerComputedStats() {
+  const g = GLOVES_SHOP.find(x => x.id === user.eqGloves) || GLOVES_SHOP[0];
+  const s = SHORTS_SHOP.find(x => x.id === user.eqShorts) || SHORTS_SHOP[0];
+  return {
+    maxHp: 100 + (user.stats.chin - 1) * 14,
+    power: 10 + (user.stats.power - 1) * 2.5,
+    speed: 1 + (user.stats.speed - 1) * 0.065,
+    maxStam: 100 + (user.stats.stamina - 1) * 15,
+    chin: 8 + (user.stats.chin - 1) * 2.2,
+    glovesColor: g.color,
+    shortsColor: s.color
+  };
+}
+
+function filterDivision(div, btn) {
+  currentDivFilter = div;
+  document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCareer();
+}
+
+function renderCareer() {
+  const list = document.getElementById('ai-list');
+  const filtered = currentDivFilter === 'all'
+    ? REAL_BOXERS
+    : REAL_BOXERS.filter(b => b.div === currentDivFilter);
+
+  document.getElementById('roster-count').textContent = `${filtered.length} бойцов`;
+
+  list.innerHTML = filtered.map(opp => `
+    <div class="opp-item">
+      <div class="opp-info">
+        <h4>${opp.name} <span class="opp-nick">«${opp.nick}»</span></h4>
+        <p>${opp.style}</p>
+        <div class="mini-stats-row">
+          <span class="ms-chip">❤️ HP ${opp.hp}</span>
+          <span class="ms-chip">💥 Сила ${opp.power}</span>
+          <span class="ms-chip">⚡ Скор. ${opp.speed.toFixed(2)}</span>
+          <span class="ms-chip">🫁 Вын. ${opp.stam}</span>
+          <span class="ms-chip">🛡️ Держ. ${opp.chin}</span>
+        </div>
+        <span class="opp-badge">Гонорар: +${opp.reward} $</span>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="startAiFight('${opp.id}')">Бой</button>
+    </div>
+  `).join('');
+}
+
+function renderGym() {
+  updateHeader();
+  const cfg = [
+    { key: 'power', title: '💥 Сила удара', desc: 'Увеличивает урон всех ударов и пробой блока' },
+    { key: 'speed', title: '⚡ Скорость и рефлексы', desc: 'Быстрее удары, уклоны и восстановление' },
+    { key: 'stamina', title: '🫁 Выносливость (Кардио)', desc: 'Больше запас сил на затяжные серии' },
+    { key: 'chin', title: '🛡️ Держалка (Подбородок)', desc: 'Больше здоровья и защита от нокдаунов' }
+  ];
+  const list = document.getElementById('gym-stats-list');
+  list.innerHTML = cfg.map(c => {
+    const lvl = user.stats[c.key];
+    const cost = lvl * 110;
+    const pct = Math.min(100, (lvl / 25) * 100);
+    return `
+      <div class="stat-row">
+        <div>
+          <div style="font-weight:700;font-size:14px">${c.title} <span style="color:var(--gold)">Ур. ${lvl}</span></div>
+          <div style="font-size:11px;color:var(--muted)">${c.desc}</div>
+          <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="upgradeStat('${c.key}', ${cost})">
+          +${cost} $
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+async function upgradeStat(key, cost) {
+  if (user.money < cost) {
+    alert('Недостаточно денег! Проведи пару боев на ринге.');
+    return;
+  }
+  user.money -= cost;
+  user.stats[key] += 1;
+  renderGym();
+  await saveUser();
+}
+
+function renderShop() {
+  const gBox = document.getElementById('shop-gloves');
+  gBox.innerHTML = GLOVES_SHOP.map(item => {
+    const owned = user.ownedGloves.includes(item.id);
+    const eq = user.eqGloves === item.id;
+    return `
+      <div class="shop-card ${eq ? 'equipped' : ''}">
+        <div>
+          <div class="gear-preview" style="background:${item.color}"></div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:10px">${item.name}</div>
+        </div>
+        <button class="btn ${eq ? 'btn-green' : owned ? 'btn-secondary' : 'btn-gold'} btn-sm" style="width:100%"
+          onclick="buyOrEquip('gloves', '${item.id}')">
+          ${eq ? 'Надето' : owned ? 'Надеть' : item.price + ' $'}
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  const sBox = document.getElementById('shop-shorts');
+  sBox.innerHTML = SHORTS_SHOP.map(item => {
+    const owned = user.ownedShorts.includes(item.id);
+    const eq = user.eqShorts === item.id;
+    return `
+      <div class="shop-card ${eq ? 'equipped' : ''}">
+        <div>
+          <div class="gear-preview" style="background:${item.color}"></div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:10px">${item.name}</div>
+        </div>
+        <button class="btn ${eq ? 'btn-green' : owned ? 'btn-secondary' : 'btn-gold'} btn-sm" style="width:100%"
+          onclick="buyOrEquip('shorts', '${item.id}')">
+          ${eq ? 'Надето' : owned ? 'Надеть' : item.price + ' $'}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+async function buyOrEquip(type, id) {
+  const list = type === 'gloves' ? GLOVES_SHOP : SHORTS_SHOP;
+  const ownedArr = type === 'gloves' ? user.ownedGloves : user.ownedShorts;
+  const item = list.find(x => x.id === id);
+  if (!ownedArr.includes(id)) {
+    if (user.money < item.price) {
+      alert('Не хватает денег на этот стиль!');
+      return;
+    }
+    user.money -= item.price;
+    ownedArr.push(id);
+  }
+  if (type === 'gloves') user.eqGloves = id;
+  else user.eqShorts = id;
+  renderShop();
+  await saveUser();
+}
+
+// --- LEADERBOARD & CHAT ---
+async function loadLeaderboard() {
+  const data = await fbGet('leaderboard');
+  const box = document.getElementById('leaderboard-list');
+  if (!data) {
+    box.innerHTML = '<p style="color:var(--muted);font-size:13px">Пока пусто</p>';
+    return;
+  }
+  const arr = Object.values(data).sort((a, b) => b.elo - a.elo).slice(0, 10);
+  box.innerHTML = arr.map((p, idx) => `
+    <div style="display:flex;justify-content:space-between;padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px">
+      <span><b>#${idx + 1}</b> ${p.name} <span style="color:var(--muted);font-size:11px">(${p.wins}W-${p.losses}L)</span></span>
+      <span class="elo-txt" style="font-weight:700">🏆 ${p.elo}</span>
+    </div>
+  `).join('');
+}
+
+async function loadChat() {
+  const data = await fbGet('chat');
+  const box = document.getElementById('chat-box');
+  if (!data) return;
+  const msgs = Object.values(data).slice(-25);
+  box.innerHTML = msgs.map(m => {
+    if (m.sys) return `<div class="chat-msg sys">${m.text}</div>`;
+    return `<div class="chat-msg"><b>${m.name}:</b> ${escapeHtml(m.text)}</div>`;
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  await fbPost('chat', { name: user.name, text, ts: Date.now() });
+  loadChat();
+}
+
+async function postSystemChat(text) {
+  await fbPost('chat', { sys: true, text, ts: Date.now() });
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+}
+
+// --- PVP ONLINE LOBBY ---
+async function loadPvpRooms() {
+  const rooms = await fbGet('pvp_rooms');
+  const list = document.getElementById('pvp-rooms-list');
+  if (!rooms) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:13px">Сейчас нет открытых вызовов. Создай свой!</p>';
+    return;
+  }
+  const now = Date.now();
+  const valid = Object.entries(rooms).filter(([id, r]) => r.status === 'waiting' && (now - r.createdAt < 120000));
+  if (valid.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:13px">Сейчас нет открытых вызовов. Создай свой!</p>';
+    return;
+  }
+  list.innerHTML = valid.map(([id, r]) => `
+    <div class="opp-item">
+      <div class="opp-info">
+        <h4>${escapeHtml(r.host.name)} <span style="color:#60a5fa;font-size:12px">(🏆 ${r.host.elo})</span></h4>
+        <p>Сила: ${Math.round(r.host.stats.power)} • HP: ${Math.round(r.host.stats.maxHp)}</p>
+      </div>
+      ${r.host.key === user.key
+        ? '<span style="font-size:12px;color:var(--gold)">Твой вызов</span>'
+        : `<button class="btn btn-green btn-sm" onclick="joinPvpRoom('${id}')">Принять бой</button>`
+      }
+    </div>
+  `).join('');
+}
+
+async function createPvpRoom() {
+  const pStats = getPlayerComputedStats();
+  const roomData = {
+    status: 'waiting',
+    createdAt: Date.now(),
+    host: {
+      key: user.key,
+      name: user.name,
+      elo: user.elo,
+      stats: pStats,
+      hp: pStats.maxHp,
+      stam: pStats.maxStam,
+      blockHp: 100,
+      actionId: 0,
+      lastAction: null,
+      kdCount: 0
+    },
+    guest: null
+  };
+  const res = await fbPost('pvp_rooms', roomData);
+  pvpRoomId = res.name;
+  pvpRole = 'host';
+  document.getElementById('pvp-host-box').classList.add('hidden');
+  document.getElementById('pvp-waiting-box').classList.remove('hidden');
+  loadPvpRooms();
+}
+
+async function cancelPvpRoom() {
+  if (pvpRoomId) {
+    await fbDelete(`pvp_rooms/${pvpRoomId}`);
+    pvpRoomId = null;
+    pvpRole = null;
+  }
+  document.getElementById('pvp-host-box').classList.remove('hidden');
+  document.getElementById('pvp-waiting-box').classList.add('hidden');
+  loadPvpRooms();
+}
+
+async function checkPvpLobbyState() {
+  if (pvpRoomId && pvpRole === 'host') {
+    const room = await fbGet(`pvp_rooms/${pvpRoomId}`);
+    if (room && room.status === 'fighting' && room.guest) {
+      document.getElementById('pvp-host-box').classList.remove('hidden');
+      document.getElementById('pvp-waiting-box').classList.add('hidden');
+      startPvpFight(room);
+    }
+  } else {
+    loadPvpRooms();
+  }
+}
+
+async function joinPvpRoom(roomId) {
+  const room = await fbGet(`pvp_rooms/${roomId}`);
+  if (!room || room.status !== 'waiting') {
+    alert('Этот бой уже начался или отменен.');
+    loadPvpRooms();
+    return;
+  }
+  const pStats = getPlayerComputedStats();
+  const guestData = {
+    key: user.key,
+    name: user.name,
+    elo: user.elo,
+    stats: pStats,
+    hp: pStats.maxHp,
+    stam: pStats.maxStam,
+    blockHp: 100,
+    actionId: 0,
+    lastAction: null,
+    kdCount: 0
+  };
+  await fbPatch(`pvp_rooms/${roomId}`, { status: 'fighting', guest: guestData });
+  room.guest = guestData;
+  room.status = 'fighting';
+  pvpRoomId = roomId;
+  pvpRole = 'guest';
+  startPvpFight(room);
+}
+
+// =========================================================================
+// FIGHT ENGINE (2.5D CANVAS + UFC/FIGHT NIGHT MECHANICS)
+// =========================================================================
+const canvas = document.getElementById('ringCanvas');
+const ctx = canvas.getContext('2d');
+
+const MOVES = {
+  jab:      { dmg: 0.75, stam: 7,  windup: 140, active: 130, rec: 150, reach: 95,  type: 'high', name: 'ДЖЕБ' },
+  cross:    { dmg: 1.15, stam: 13, windup: 220, active: 150, rec: 220, reach: 105, type: 'high', name: 'КРОСС' },
+  hook:     { dmg: 1.45, stam: 18, windup: 290, active: 160, rec: 270, reach: 90,  type: 'hook', name: 'ХУК' },
+  uppercut: { dmg: 1.65, stam: 21, windup: 320, active: 160, rec: 300, reach: 82,  type: 'upper',name: 'АППЕРКОТ' },
+  body:     { dmg: 0.90, stam: 14, windup: 210, active: 150, rec: 210, reach: 92,  type: 'body', name: 'В КОРПУС' },
+  lean:     { dmg: 0,    stam: 9,  windup: 40,  active: 360, rec: 140, reach: 0,   type: 'dodge',name: 'ОТКЛОН' },
+  duck:     { dmg: 0,    stam: 10, windup: 40,  active: 380, rec: 150, reach: 0,   type: 'dodge',name: 'НЫРОК' }
+};
+
+let fight = {
+  active: false,
+  mode: 'ai',
+  aiData: null,
+  round: 1,
+  maxRounds: 3,
+  roundTime: 90,
+  lastTs: 0,
+  slowMo: 1.0,
+  slowMoTimer: 0,
+  shake: 0,
+  particles: [],
+  floatingTexts: [],
+  p1: null,
+  p2: null,
+  kdActive: false,
+  kdCount: 0,
+  kdTimer: 0,
+  kdCursor: 0,
+  kdDir: 1,
+  kdZoneStart: 38,
+  kdZoneWidth: 24,
+  myActionSeq: 0
+};
+
+function createFighterObj(name, stats, shortsColor, glovesColor, isPlayer, appearance = {}) {
+  return {
+    name,
+    isPlayer,
+    maxHp: stats.maxHp,
+    hp: stats.maxHp,
+    maxStam: stats.maxStam,
+    stam: stats.maxStam,
+    power: stats.power,
+    speed: stats.speed,
+    chin: stats.chin,
+    blockHp: 100,
+    blocking: false,
+    state: 'idle',
+    move: null,
+    stateTimer: 0,
+    hitDealt: false,
+    counterBonus: 0,
+    kdThisRound: 0,
+    totalKd: 0,
+    bruise: 0,
+    shortsColor,
+    glovesColor,
+    skinColor: appearance.skin || '#e0a37b',
+    hairColor: appearance.hair || '#1f2937',
+    aiTendency: appearance.aiTendency || 'balanced',
+    xOffset: 0,
+    yOffset: 0,
+    headTilt: 0,
+    punchExt: 0,
+    punchHeight: 0,
+    aiNextThink: 600
+  };
+}
+
+function startAiFight(aiId) {
+  const ai = REAL_BOXERS.find(x => x.id === aiId);
+  const pStats = getPlayerComputedStats();
+  fight.mode = 'ai';
+  fight.aiData = ai;
+  fight.p1 = createFighterObj(user.name, pStats, pStats.shortsColor, pStats.glovesColor, true);
+  fight.p2 = createFighterObj(ai.name, {
+    maxHp: ai.hp, power: ai.power, speed: ai.speed, maxStam: ai.stam, chin: ai.chin
+  }, ai.color, ai.gloves, false, { skin: ai.skin, hair: ai.hair, aiTendency: ai.aiTendency });
+
+  document.getElementById('hud-mode').textContent = `VS ${ai.nick.toUpperCase()}`;
+  launchArena();
+}
+
+function startPvpFight(room) {
+  const me = pvpRole === 'host' ? room.host : room.guest;
+  const opp = pvpRole === 'host' ? room.guest : room.host;
+
+  fight.mode = 'pvp';
+  fight.aiData = null;
+  fight.p1 = createFighterObj(me.name, me.stats, me.stats.shortsColor || '#dc2626', me.stats.glovesColor || '#ef4444', true);
+  fight.p2 = createFighterObj(opp.name, opp.stats, opp.stats.shortsColor || '#2563eb', opp.stats.glovesColor || '#f59e0b', false);
+  pvpLastEnemyActionId = opp.actionId || 0;
+
+  document.getElementById('hud-mode').textContent = 'ОНЛАЙН PvP';
+  launchArena();
+
+  if (pvpPollTimer) clearInterval(pvpPollTimer);
+  pvpPollTimer = setInterval(syncPvpLoop, 220);
+}
+
+function launchArena() {
+  fight.active = true;
+  fight.round = 1;
+  fight.roundTime = 90;
+  fight.particles = [];
+  fight.floatingTexts = [];
+  fight.kdActive = false;
+  fight.slowMo = 1.0;
+
+  document.getElementById('hud-p1-name').textContent = fight.p1.name;
+  document.getElementById('hud-p2-name').textContent = fight.p2.name;
+  document.getElementById('fight-screen').classList.remove('hidden');
+  document.getElementById('kd-modal').classList.add('hidden');
+  resizeCanvas();
+  showBanner('РАУНД 1 — БОЙ!', '#f59e0b');
+  fight.lastTs = performance.now();
+  requestAnimationFrame(gameLoop);
+}
+
+function resizeCanvas() {
+  const wrap = document.getElementById('ring-wrap');
+  canvas.width = wrap.clientWidth * window.devicePixelRatio;
+  canvas.height = wrap.clientHeight * window.devicePixelRatio;
+  ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+}
+window.addEventListener('resize', () => { if (fight.active) resizeCanvas(); });
+
+function showBanner(text, color = '#fff') {
+  const el = document.getElementById('banner-overlay');
+  el.textContent = text;
+  el.style.color = color;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1100);
+}
+
+function addFloatingText(x, y, text, color) {
+  fight.floatingTexts.push({ x, y, text, color, life: 1.0 });
+}
+
+function spawnSweatAndSparks(x, y, color, count = 10) {
+  for (let i = 0; i < count; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 2 + Math.random() * 5;
+    fight.particles.push({
+      x, y,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd - 2,
+      life: 1.0,
+      color,
+      size: 2 + Math.random() * 3
+    });
+  }
+}
+
+// --- PLAYER INPUTS ---
+function setBlock(state) {
+  if (!fight.active || fight.kdActive) return;
+  if (fight.p1.blockHp <= 5 && state) return;
+  fight.p1.blocking = state;
+  const btn = document.getElementById('btn-block');
+  if (state) btn.classList.add('pressed'); else btn.classList.remove('pressed');
+  if (fight.mode === 'pvp') pushPvpState({ blocking: state });
+}
+
+function playerAction(moveKey) {
+  if (!fight.active || fight.kdActive) return;
+  triggerMove(fight.p1, fight.p2, moveKey);
+  if (fight.mode === 'pvp') {
+    fight.myActionSeq++;
+    pushPvpState({ actionId: fight.myActionSeq, lastAction: moveKey });
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (!fight.active) return;
+  const k = e.key.toLowerCase();
+  if (k === 'q') playerAction('jab');
+  if (k === 'w') playerAction('cross');
+  if (k === 'e') playerAction('hook');
+  if (k === 'r') playerAction('uppercut');
+  if (k === 'a') playerAction('body');
+  if (k === 's') setBlock(true);
+  if (k === 'd') playerAction('lean');
+  if (k === 'f') playerAction('duck');
+});
+document.addEventListener('keyup', e => {
+  if (e.key.toLowerCase() === 's') setBlock(false);
+});
+
+function triggerMove(actor, target, moveKey) {
+  if (actor.state !== 'idle' && actor.state !== 'recover') return;
+  const m = MOVES[moveKey];
+  if (!m) return;
+  if (actor.stam < m.stam) {
+    if (actor.isPlayer) showBanner('НЕТ ВЫНОСЛИВОСТИ!', '#ef4444');
+    return;
+  }
+
+  actor.blocking = false;
+  actor.stam = Math.max(0, actor.stam - m.stam);
+  actor.move = moveKey;
+  actor.hitDealt = false;
+
+  const spdFactor = Math.max(0.65, actor.speed * (0.55 + 0.45 * (actor.stam / actor.maxStam)));
+  actor.state = 'windup';
+  actor.stateTimer = m.windup / spdFactor;
+
+  if (m.type === 'dodge' && (target.state === 'windup' || target.state === 'active')) {
+    actor.counterBonus = 2200;
+    if (actor.isPlayer) {
+      fight.slowMo = 0.35;
+      fight.slowMoTimer = 450;
+      showBanner('ИДЕАЛЬНЫЙ УКЛОН! КОНТР-УДАР!', '#10b981');
+    }
+  }
+}
+
+// --- COMBAT RESOLUTION ---
+function resolveStrike(attacker, defender) {
+  const m = MOVES[attacker.move];
+  if (!m || m.dmg <= 0) return;
+
+  const wrap = document.getElementById('ring-wrap');
+  const cx = wrap.clientWidth / 2;
+  const cy = wrap.clientHeight * 0.52;
+  const hitX = defender.isPlayer ? cx - 45 : cx + 45;
+  const hitY = m.type === 'body' ? cy + 20 : cy - 35;
+
+  // 1. Check Dodges
+  if (defender.state === 'lean' && (m.type === 'high' || m.type === 'hook' || m.type === 'upper')) {
+    addFloatingText(hitX, hitY - 30, 'УКЛОН!', '#34d399');
+    return;
+  }
+  if (defender.state === 'duck' && (m.type === 'high' || m.type === 'hook')) {
+    addFloatingText(hitX, hitY - 30, 'НЫРОК!', '#34d399');
+    return;
+  }
+
+  let dmg = attacker.power * m.dmg;
+  let isCrit = false;
+
+  // Uppercut catches ducking opponent!
+  if (m.type === 'upper' && defender.state === 'duck') {
+    dmg *= 1.65;
+    isCrit = true;
+    addFloatingText(hitX, hitY - 45, 'ПОЙМАЛ НА НЫРКЕ! КРИТ!', '#f59e0b');
+  }
+  // Counter attack bonus
+  if (attacker.counterBonus > 0) {
+    dmg *= 1.8;
+    isCrit = true;
+    attacker.counterBonus = 0;
+    addFloatingText(hitX, hitY - 45, 'КОНТР-УДАР ×1.8!', '#10b981');
+  }
+  // Hit during windup (interrupt)
+  if (defender.state === 'windup' && m.type !== 'body') {
+    dmg *= 1.25;
+    defender.state = 'hurt';
+    defender.stateTimer = 180;
+  }
+
+  // 2. Check Block
+  if (defender.blocking && defender.blockHp > 0 && m.type !== 'body') {
+    const blockBreak = m.type === 'hook' ? dmg * 1.9 : dmg * 1.1;
+    defender.blockHp = Math.max(0, defender.blockHp - blockBreak);
+    const chipDmg = dmg * 0.18;
+    defender.hp = Math.max(0, defender.hp - chipDmg);
+    spawnSweatAndSparks(hitX, hitY, '#38bdf8', 7);
+    addFloatingText(hitX, hitY - 15, defender.blockHp <= 0 ? 'БЛОК ПРОБИТ!' : 'БЛОК', '#38bdf8');
+    if (defender.blockHp <= 0) {
+      defender.blocking = false;
+      defender.state = 'hurt';
+      defender.stateTimer = 350;
+    }
+    return;
+  }
+
+  // 3. Clean Hit!
+  const finalDmg = Math.max(2, dmg * (100 / (100 + defender.chin * 1.5)));
+  defender.hp = Math.max(0, defender.hp - finalDmg);
+  defender.bruise = Math.min(1, defender.bruise + finalDmg / (defender.maxHp * 0.7));
+
+  if (m.type === 'body') {
+    defender.stam = Math.max(0, defender.stam - finalDmg * 1.35);
+    addFloatingText(hitX, hitY, `-${Math.round(finalDmg)} (КОРПУС)`, '#fbbf24');
+  } else {
+    addFloatingText(hitX, hitY - 20, `-${Math.round(finalDmg)}${isCrit ? '!' : ''}`, isCrit ? '#f59e0b' : '#ef4444');
+  }
+
+  spawnSweatAndSparks(hitX, hitY, isCrit ? '#f59e0b' : '#ffffff', isCrit ? 18 : 11);
+  fight.shake = isCrit ? 12 : 6;
+
+  if (defender.hp <= 0) {
+    handleKnockdown(defender, attacker);
+  }
+}
+
+function handleKnockdown(fallen, winner) {
+  fallen.kdThisRound += 1;
+  fallen.totalKd += 1;
+  fallen.state = 'knocked';
+  fight.slowMo = 0.3;
+  fight.slowMoTimer = 800;
+  fight.shake = 16;
+
+  if (fallen.kdThisRound >= 3 || fallen.totalKd >= 4) {
+    endFight(winner === fight.p1, 'Технический нокаут (3 нокдауна)!');
+    return;
+  }
+
+  if (fallen.isPlayer) {
+    fight.kdActive = true;
+    fight.kdCount = 1;
+    fight.kdTimer = 0;
+    fight.kdCursor = 0;
+    fight.kdDir = 1;
+    const shrink = Math.min(12, fallen.totalKd * 4);
+    fight.kdZoneWidth = Math.max(10, 26 - shrink);
+    fight.kdZoneStart = 50 - fight.kdZoneWidth / 2;
+
+    document.getElementById('kd-zone').style.left = fight.kdZoneStart + '%';
+    document.getElementById('kd-zone').style.width = fight.kdZoneWidth + '%';
+    document.getElementById('kd-number').textContent = '1';
+    document.getElementById('kd-modal').classList.remove('hidden');
+  } else {
+    if (fight.mode === 'ai') {
+      showBanner('НОКДАУН!', '#f59e0b');
+      setTimeout(() => {
+        if (!fight.active) return;
+        const getUpChance = Math.max(0.2, 0.85 - fallen.totalKd * 0.25);
+        if (Math.random() < getUpChance) {
+          fallen.hp = fallen.maxHp * (0.42 - fallen.totalKd * 0.08);
+          fallen.stam = fallen.maxStam * 0.6;
+          fallen.state = 'idle';
+          showBanner('СОПЕРНИК ВСТАЛ! ПРОДОЛЖАЕМ!', '#fff');
+        } else {
+          endFight(true, `Нокаут в ${fight.round} раунде!`);
+        }
+      }, 1800);
+    } else {
+      showBanner('СОПЕРНИК В НОКДАУНЕ!', '#f59e0b');
+    }
+  }
+}
+
+function tryStandUp() {
+  if (!fight.kdActive) return;
+  const c = fight.kdCursor;
+  const z1 = fight.kdZoneStart;
+  const z2 = z1 + fight.kdZoneWidth;
+
+  if (c >= z1 && c <= z2) {
+    fight.kdActive = false;
+    document.getElementById('kd-modal').classList.add('hidden');
+    fight.p1.hp = fight.p1.maxHp * Math.max(0.25, 0.48 - fight.p1.totalKd * 0.08);
+    fight.p1.stam = fight.p1.maxStam * 0.65;
+    fight.p1.state = 'idle';
+    showBanner('ТЫ ВСТАЛ! ДЕРЖИСЬ!', '#10b981');
+    if (fight.mode === 'pvp') pushPvpState({ hp: fight.p1.hp, stam: fight.p1.stam, kdCount: fight.p1.totalKd });
+  } else {
+    fight.kdCount += 1;
+    document.getElementById('kd-number').textContent = fight.kdCount;
+    if (fight.kdCount >= 10) {
+      fight.kdActive = false;
+      document.getElementById('kd-modal').classList.add('hidden');
+      endFight(false, `Нокаут! Ты не успел встать на счет 10.`);
+    }
+  }
+}
+
+// --- AI BRAIN WITH REAL FIGHTER STYLES ---
+function updateAi(dt) {
+  const ai = fight.p2;
+  const pl = fight.p1;
+  if (ai.state === 'knocked') return;
+
+  ai.aiNextThink -= dt;
+  if (ai.aiNextThink > 0) return;
+
+  const baseDelay = Math.max(240, 760 / ai.speed);
+  ai.aiNextThink = baseDelay * (0.65 + Math.random() * 0.65);
+
+  const style = ai.aiTendency;
+
+  // Defensive reactions tailored by style
+  if (pl.state === 'windup') {
+    const r = Math.random();
+    const dodgeSkill = (style === 'counter_puncher' || style === 'technician' || style === 'outboxer') ? 0.46 : 0.26;
+    if (r < dodgeSkill * Math.min(1.3, ai.speed)) {
+      const dodgeMove = (style === 'peekaboo' || style === 'body_snatcher') ? 'duck' : (Math.random() < 0.6 ? 'lean' : 'duck');
+      triggerMove(ai, pl, dodgeMove);
+      return;
+    } else if (r < 0.68 && ai.blockHp > 25) {
+      ai.blocking = true;
+      setTimeout(() => { ai.blocking = false; }, 520);
+      return;
+    }
+  }
+
+  if (ai.stam < 22) {
+    ai.blocking = true;
+    setTimeout(() => { ai.blocking = false; }, 700);
+    return;
+  }
+
+  // Style-specific attack selection
+  let pool = ['jab', 'cross', 'hook', 'body', 'uppercut'];
+  if (style === 'hooker')          pool = ['jab', 'hook', 'hook', 'hook', 'cross'];
+  if (style === 'outboxer')        pool = ['jab', 'jab', 'jab', 'cross', 'lean'];
+  if (style === 'counter_puncher') pool = ['jab', 'lean', 'cross', 'uppercut', 'hook'];
+  if (style === 'technician')      pool = ['jab', 'jab', 'body', 'hook', 'duck', 'cross'];
+  if (style === 'body_snatcher')   pool = ['body', 'body', 'hook', 'uppercut', 'cross'];
+  if (style === 'pressure')        pool = ['jab', 'cross', 'hook', 'hook', 'body', 'uppercut'];
+  if (style === 'sniper')          pool = ['jab', 'jab', 'cross', 'cross', 'uppercut'];
+  if (style === 'peekaboo')        pool = ['duck', 'hook', 'hook', 'uppercut', 'uppercut', 'body'];
+
+  if (pl.blocking) pool.push('hook', 'hook', 'body');
+  if (pl.state === 'duck') pool.push('uppercut', 'uppercut');
+
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  triggerMove(ai, pl, pick);
+}
+
+// --- PVP SYNC ---
+async function pushPvpState(extra = {}) {
+  if (!pvpRoomId || !pvpRole) return;
+  const payload = {
+    hp: fight.p1.hp,
+    stam: fight.p1.stam,
+    blockHp: fight.p1.blockHp,
+    blocking: fight.p1.blocking,
+    kdCount: fight.p1.totalKd,
+    ...extra
+  };
+  await fbPatch(`pvp_rooms/${pvpRoomId}/${pvpRole}`, payload);
+}
+
+async function syncPvpLoop() {
+  if (!fight.active || fight.mode !== 'pvp' || !pvpRoomId) return;
+  try {
+    await pushPvpState();
+    const room = await fbGet(`pvp_rooms/${pvpRoomId}`);
+    if (!room) return;
+    if (room.status === 'finished' && room.winnerKey) {
+      endFight(room.winnerKey === user.key, room.reason || 'Бой завершен!');
+      return;
+    }
+    const enemyObj = pvpRole === 'host' ? room.guest : room.host;
+    if (!enemyObj) return;
+
+    fight.p2.blocking = !!enemyObj.blocking;
+    fight.p2.blockHp = enemyObj.blockHp ?? 100;
+
+    if (enemyObj.hp > 0 && fight.p2.state === 'knocked') {
+      fight.p2.state = 'idle';
+      fight.p2.hp = enemyObj.hp;
+      showBanner('СОПЕРНИК ВСТАЛ!', '#fff');
+    }
+    if (enemyObj.kdCount >= 4) {
+      await fbPatch(`pvp_rooms/${pvpRoomId}`, { status: 'finished', winnerKey: user.key, reason: 'Нокаут в онлайн-бою!' });
+      endFight(true, 'Нокаут в онлайн-бою!');
+      return;
+    }
+
+    if (enemyObj.actionId && enemyObj.actionId > pvpLastEnemyActionId) {
+      pvpLastEnemyActionId = enemyObj.actionId;
+      if (enemyObj.lastAction) {
+        triggerMove(fight.p2, fight.p1, enemyObj.lastAction);
+      }
+    }
+  } catch (e) {}
+}
+
+// --- MAIN LOOP ---
+function updateFighter(f, opp, dt) {
+  if (f.state === 'idle' && !f.blocking) {
+    f.stam = Math.min(f.maxStam, f.stam + (dt / 1000) * (10 + f.speed * 4));
+    f.blockHp = Math.min(100, f.blockHp + (dt / 1000) * 12);
+  } else if (f.blocking) {
+    f.stam = Math.min(f.maxStam, f.stam + (dt / 1000) * 4);
+  }
+
+  if (f.counterBonus > 0) f.counterBonus = Math.max(0, f.counterBonus - dt);
+
+  if (f.state !== 'idle' && f.state !== 'knocked') {
+    f.stateTimer -= dt;
+    const m = MOVES[f.move];
+
+    if (f.state === 'windup') {
+      f.punchExt = -10;
+      if (f.stateTimer <= 0) {
+        f.state = 'active';
+        f.stateTimer = m ? m.active : 150;
+        if (!f.hitDealt && m && m.dmg > 0) {
+          f.hitDealt = true;
+          resolveStrike(f, opp);
+        }
+      }
+    } else if (f.state === 'active') {
+      f.punchExt = m && m.dmg > 0 ? 55 : 0;
+      f.punchHeight = m && m.type === 'body' ? 28 : m && m.type === 'upper' ? -25 : -10;
+      if (f.stateTimer <= 0) {
+        f.state = 'recover';
+        f.stateTimer = m ? m.rec : 150;
+      }
+    } else if (f.state === 'recover' || f.state === 'hurt') {
+      f.punchExt *= 0.8;
+      if (f.stateTimer <= 0) {
+        f.state = 'idle';
+        f.move = null;
+        f.punchExt = 0;
+      }
+    }
+  } else {
+    f.punchExt = 0;
+  }
+
+  const targetTilt = f.state === 'lean' ? -28 : f.state === 'duck' ? 14 : f.state === 'hurt' ? -15 : 0;
+  const targetY = f.state === 'duck' ? 36 : f.state === 'knocked' ? 85 : 0;
+  f.headTilt += (targetTilt - f.headTilt) * 0.25;
+  f.yOffset += (targetY - f.yOffset) * 0.25;
+}
+
+function gameLoop(ts) {
+  if (!fight.active) return;
+  const rawDt = Math.min(50, ts - fight.lastTs);
+  fight.lastTs = ts;
+
+  if (fight.slowMoTimer > 0) {
+    fight.slowMoTimer -= rawDt;
+    if (fight.slowMoTimer <= 0) fight.slowMo = 1.0;
+  }
+  const dt = rawDt * fight.slowMo;
+
+  if (fight.kdActive) {
+    fight.kdTimer += rawDt;
+    fight.kdCursor += fight.kdDir * (rawDt * 0.085);
+    if (fight.kdCursor >= 97) { fight.kdCursor = 97; fight.kdDir = -1; }
+    if (fight.kdCursor <= 0) { fight.kdCursor = 0; fight.kdDir = 1; }
+    document.getElementById('kd-cursor').style.left = fight.kdCursor + '%';
+
+    if (fight.kdTimer >= 1100) {
+      fight.kdTimer = 0;
+      fight.kdCount += 1;
+      document.getElementById('kd-number').textContent = fight.kdCount;
+      if (fight.kdCount >= 10) {
+        fight.kdActive = false;
+        document.getElementById('kd-modal').classList.add('hidden');
+        endFight(false, 'Нокаут! Счет 10.');
+        return;
+      }
+    }
+  } else {
+    fight.roundTime -= dt / 1000;
+    if (fight.roundTime <= 0) {
+      if (fight.round < fight.maxRounds) {
+        fight.round += 1;
+        fight.roundTime = 90;
+        fight.p1.kdThisRound = 0;
+        fight.p2.kdThisRound = 0;
+        fight.p1.hp = Math.min(fight.p1.maxHp, fight.p1.hp + fight.p1.maxHp * 0.18);
+        fight.p2.hp = Math.min(fight.p2.maxHp, fight.p2.hp + fight.p2.maxHp * 0.18);
+        fight.p1.stam = fight.p1.maxStam;
+        fight.p2.stam = fight.p2.maxStam;
+        fight.p1.blockHp = 100;
+        fight.p2.blockHp = 100;
+        showBanner(`РАУНД ${fight.round} — БОЙ!`, '#f59e0b');
+      } else {
+        const p1Pct = fight.p1.hp / fight.p1.maxHp;
+        const p2Pct = fight.p2.hp / fight.p2.maxHp;
+        endFight(p1Pct >= p2Pct, 'Победа решением судей по очкам!');
+        return;
+      }
+    }
+
+    updateFighter(fight.p1, fight.p2, dt);
+    updateFighter(fight.p2, fight.p1, dt);
+    if (fight.mode === 'ai') updateAi(dt);
+  }
+
+  updateHud();
+  renderRing(dt);
+  requestAnimationFrame(gameLoop);
+}
+
+function updateHud() {
+  document.getElementById('hud-round').textContent = `РАУНД ${fight.round} / ${fight.maxRounds}`;
+  const sec = Math.max(0, Math.ceil(fight.roundTime));
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  document.getElementById('hud-timer').textContent = `${m}:${s}`;
+
+  const p1Pct = Math.max(0, (fight.p1.hp / fight.p1.maxHp) * 100);
+  const p2Pct = Math.max(0, (fight.p2.hp / fight.p2.maxHp) * 100);
+  document.getElementById('hud-p1-hp').style.width = p1Pct + '%';
+  document.getElementById('hud-p2-hp').style.width = p2Pct + '%';
+  document.getElementById('hud-p1-hp-txt').textContent = Math.ceil(p1Pct) + '%';
+  document.getElementById('hud-p2-hp-txt').textContent = Math.ceil(p2Pct) + '%';
+
+  document.getElementById('hud-p1-stam').style.width = (fight.p1.stam / fight.p1.maxStam) * 100 + '%';
+  document.getElementById('hud-p1-blk').style.width = fight.p1.blockHp + '%';
+  document.getElementById('hud-p2-stam').style.width = (fight.p2.stam / fight.p2.maxStam) * 100 + '%';
+  document.getElementById('hud-p2-blk').style.width = fight.p2.blockHp + '%';
+}
+
+// --- CANVAS 2.5D RENDERING ---
+function renderRing(dt) {
+  const wrap = document.getElementById('ring-wrap');
+  const w = wrap.clientWidth;
+  const h = wrap.clientHeight;
+  ctx.save();
+
+  if (fight.shake > 0) {
+    const sx = (Math.random() - 0.5) * fight.shake;
+    const sy = (Math.random() - 0.5) * fight.shake;
+    ctx.translate(sx, sy);
+    fight.shake *= 0.82;
+    if (fight.shake < 0.4) fight.shake = 0;
+  }
+
+  const bgGrad = ctx.createRadialGradient(w / 2, h * 0.25, 20, w / 2, h * 0.5, w * 0.8);
+  bgGrad.addColorStop(0, '#1e2638');
+  bgGrad.addColorStop(0.6, '#0f131c');
+  bgGrad.addColorStop(1, '#06080c');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.fillStyle = 'rgba(255, 245, 210, 0.04)';
+  ctx.beginPath();
+  ctx.moveTo(w * 0.25, 0); ctx.lineTo(w * 0.05, h * 0.75); ctx.lineTo(w * 0.55, h * 0.75);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(w * 0.75, 0); ctx.lineTo(w * 0.45, h * 0.75); ctx.lineTo(w * 0.95, h * 0.75);
+  ctx.closePath(); ctx.fill();
+
+  const floorTop = h * 0.56;
+  const floorBot = h * 0.94;
+  const floorGrad = ctx.createLinearGradient(0, floorTop, 0, floorBot);
+  floorGrad.addColorStop(0, '#1e3a5f');
+  floorGrad.addColorStop(1, '#13253d');
+  ctx.fillStyle = floorGrad;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.12, floorTop);
+  ctx.lineTo(w * 0.88, floorTop);
+  ctx.lineTo(w * 0.98, floorBot);
+  ctx.lineTo(w * 0.02, floorBot);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.ellipse(w / 2, (floorTop + floorBot) / 2, 75, 24, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.14)';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('KAPUTKIN GYM', w / 2, (floorTop + floorBot) / 2 + 4);
+
+  const postL = w * 0.13;
+  const postR = w * 0.87;
+  const postTop = h * 0.30;
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(postL - 6, postTop, 12, floorTop - postTop + 6);
+  ctx.fillRect(postR - 6, postTop, 12, floorTop - postTop + 6);
+
+  ctx.fillStyle = '#dc2626';
+  ctx.fillRect(postL - 8, postTop + 8, 16, floorTop - postTop - 8);
+  ctx.fillStyle = '#2563eb';
+  ctx.fillRect(postR - 8, postTop + 8, 16, floorTop - postTop - 8);
+
+  const ropeColors = ['#ef4444', '#f8fafc', '#3b82f6'];
+  for (let i = 0; i < 3; i++) {
+    const ry = postTop + 18 + i * 24;
+    ctx.strokeStyle = ropeColors[i];
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(postL, ry);
+    ctx.lineTo(postR, ry);
+    ctx.stroke();
+  }
+
+  const baseY = h * 0.72;
+  drawBoxer(fight.p1, w / 2 - 58, baseY, 1);
+  drawBoxer(fight.p2, w / 2 + 58, baseY, -1);
+
+  for (let i = fight.particles.length - 1; i >= 0; i--) {
+    const p = fight.particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.25;
+    p.life -= dt / 450;
+    if (p.life <= 0) {
+      fight.particles.splice(i, 1);
+      continue;
+    }
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  for (let i = fight.floatingTexts.length - 1; i >= 0; i--) {
+    const ft = fight.floatingTexts[i];
+    ft.y -= dt * 0.04;
+    ft.life -= dt / 900;
+    if (ft.life <= 0) {
+      fight.floatingTexts.splice(i, 1);
+      continue;
+    }
+    ctx.globalAlpha = Math.max(0, ft.life);
+    ctx.font = '900 15px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#000';
+    ctx.fillText(ft.text, ft.x + 1, ft.y + 1);
+    ctx.fillStyle = ft.color;
+    ctx.fillText(ft.text, ft.x, ft.y);
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawBoxer(f, x, y, dir) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
+  ctx.beginPath();
+  ctx.ellipse(x, y + 6, 36, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.translate(x, y + f.yOffset);
+  ctx.scale(dir, 1);
+
+  if (f.state === 'knocked') {
+    ctx.rotate(-Math.PI / 2.2);
+  }
+
+  if (f.counterBonus > 0) {
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, -65, 58, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Legs
+  ctx.strokeStyle = f.skinColor;
+  ctx.lineWidth = 11;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-12, -45); ctx.lineTo(-20, -4);
+  ctx.moveTo(10, -45);  ctx.lineTo(18, -4);
+  ctx.stroke();
+
+  // Boxing boots
+  ctx.fillStyle = '#111827';
+  ctx.fillRect(-27, -10, 15, 11);
+  ctx.fillRect(11, -10, 15, 11);
+
+  // Shorts
+  ctx.fillStyle = f.shortsColor;
+  ctx.beginPath();
+  ctx.roundRect(-20, -68, 38, 28, 6);
+  ctx.fill();
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(-20, -68, 38, 5);
+
+  // Torso
+  ctx.save();
+  ctx.translate(0, -65);
+  ctx.rotate((f.headTilt * Math.PI) / 180);
+
+  ctx.fillStyle = f.skinColor;
+  ctx.beginPath();
+  ctx.roundRect(-21, -46, 40, 48, 12);
+  ctx.fill();
+
+  // Head
+  ctx.fillStyle = f.skinColor;
+  ctx.beginPath();
+  ctx.arc(4, -62, 16, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Bruise
+  if (f.bruise > 0.1) {
+    ctx.fillStyle = `rgba(220, 38, 38, ${f.bruise * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(9, -60, 10, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Hair
+  ctx.fillStyle = f.hairColor;
+  ctx.beginPath();
+  ctx.arc(1, -66, 15, Math.PI * 0.9, Math.PI * 2.05);
+  ctx.fill();
+
+  let gx = 24 + f.punchExt;
+  let gy = -42 + f.punchHeight;
+  if (f.blocking) {
+    gx = 18;
+    gy = -56;
+  }
+
+  // Back arm
+  ctx.strokeStyle = f.skinColor;
+  ctx.lineWidth = 9;
+  ctx.beginPath();
+  ctx.moveTo(8, -36);
+  ctx.lineTo(f.blocking ? 22 : 16, f.blocking ? -54 : -38);
+  ctx.stroke();
+
+  ctx.fillStyle = f.glovesColor;
+  ctx.beginPath();
+  ctx.arc(f.blocking ? 23 : 18, f.blocking ? -55 : -38, 11, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Front arm
+  ctx.strokeStyle = f.skinColor;
+  ctx.lineWidth = 10;
+  ctx.beginPath();
+  ctx.moveTo(-6, -34);
+  ctx.lineTo(gx, gy);
+  ctx.stroke();
+
+  // Front Glove
+  ctx.fillStyle = f.glovesColor;
+  ctx.beginPath();
+  ctx.arc(gx, gy, 13, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  if (f.blocking) {
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(18, -52, 24, -Math.PI * 0.4, Math.PI * 0.4);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+  ctx.restore();
+}
+
+// --- END FIGHT ---
+function surrenderFight() {
+  if (!fight.active) return;
+  endFight(false, 'Ты выбросил полотенце и сдался.');
+}
+
+async function endFight(playerWon, reason) {
+  if (!fight.active) return;
+  fight.active = false;
+  if (pvpPollTimer) { clearInterval(pvpPollTimer); pvpPollTimer = null; }
+
+  let moneyDelta = 0;
+  let eloDelta = 0;
+
+  if (fight.mode === 'ai') {
+    if (playerWon) {
+      moneyDelta = fight.aiData.reward;
+      eloDelta = 8;
+      user.wins += 1;
+      if (reason.includes('Нокаут')) user.kos += 1;
+    } else {
+      moneyDelta = Math.round(fight.aiData.reward * 0.15);
+      eloDelta = -5;
+      user.losses += 1;
+    }
+  } else {
+    if (pvpRoomId) {
+      await fbPatch(`pvp_rooms/${pvpRoomId}`, {
+        status: 'finished',
+        winnerKey: playerWon ? user.key : 'opponent',
+        reason
+      });
+      setTimeout(() => fbDelete(`pvp_rooms/${pvpRoomId}`), 4000);
+      pvpRoomId = null;
+    }
+    if (playerWon) {
+      moneyDelta = 350;
+      eloDelta = 25;
+      user.wins += 1;
+      user.kos += 1;
+      await postSystemChat(`🏆 ${user.name} одержал победу в онлайн-бою! (+25 ELO)`);
+    } else {
+      moneyDelta = 50;
+      eloDelta = -18;
+      user.losses += 1;
+    }
+  }
+
+  user.money += moneyDelta;
+  user.elo = Math.max(100, user.elo + eloDelta);
+  await saveUser();
+
+  const titleEl = document.getElementById('res-title');
+  titleEl.textContent = playerWon ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ';
+  titleEl.style.color = playerWon ? '#10b981' : '#ef4444';
+  document.getElementById('res-sub').textContent = reason;
+  document.getElementById('res-rewards').textContent = `+${moneyDelta} $  •  ${eloDelta >= 0 ? '+' : ''}${eloDelta} ELO`;
+  document.getElementById('result-modal').classList.remove('hidden');
+}
+
+function closeResult() {
+  document.getElementById('result-modal').classList.add('hidden');
+  document.getElementById('fight-screen').classList.add('hidden');
+  updateHeader();
+  loadLeaderboard();
+}
+
+autoLogin();
+</script>
+</body>
+</html>

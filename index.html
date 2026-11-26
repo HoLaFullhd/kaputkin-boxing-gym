@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kaputkin Boxing Gym — Онлайн Бокс</title>
+<title>Kaputkin Boxing Gym — Онлайн Бокс v1.2</title>
 <style>
   :root {
     --bg: #0b0d12;
@@ -135,8 +135,8 @@
     gap: 8px;
   }
   .avatar-badge {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
     background: linear-gradient(135deg, #ef4444, #f59e0b);
     display: flex;
@@ -145,19 +145,28 @@
     font-weight: 900;
     font-size: 16px;
   }
-  .p-name { font-weight: 700; font-size: 14px; }
+  .p-name { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px; }
   .p-record { font-size: 11px; color: var(--muted); }
+  .rank-pill {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-weight: 800;
+    background: rgba(245, 158, 11, 0.18);
+    color: var(--gold);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+  }
   .currency-box {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
   }
   .stat-tag {
     background: var(--panel2);
     border: 1px solid var(--border);
-    padding: 5px 10px;
+    padding: 5px 9px;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
   }
   .gold-txt { color: var(--gold); }
@@ -238,7 +247,7 @@
     color: #fff;
   }
 
-  /* OPPONENT LIST & PVP */
+  /* OPPONENT LIST & RANKED */
   .opp-item {
     background: var(--panel2);
     border: 1px solid var(--border);
@@ -283,6 +292,63 @@
     font-size: 13px;
     width: auto;
     white-space: nowrap;
+  }
+
+  /* RANKED SEARCH BOX */
+  .ranked-box {
+    background: linear-gradient(145deg, #1b2234, #141824);
+    border: 1px solid #3b4766;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .rank-emblem {
+    font-size: 36px;
+    margin-bottom: 4px;
+  }
+  .rank-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .rank-progress-wrap {
+    width: 100%;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0 6px;
+    border: 1px solid var(--border);
+  }
+  .rank-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #f59e0b);
+    transition: width 0.3s;
+  }
+  .search-timer {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    margin: 8px 0;
+  }
+  .pulse-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    margin-right: 6px;
+    animation: pulseAnim 1.2s infinite;
+  }
+  @keyframes pulseAnim {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.25); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.6; }
   }
 
   /* GYM UPGRADES */
@@ -335,7 +401,7 @@
 
   /* CHAT */
   .chat-box {
-    height: 280px;
+    height: 260px;
     overflow-y: auto;
     background: var(--bg);
     border: 1px solid var(--border);
@@ -438,20 +504,21 @@
     top: 22%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+    letter-spacing: 1.5px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.95);
     pointer-events: none;
     text-align: center;
     z-index: 10;
     opacity: 0;
     transition: opacity 0.2s, transform 0.2s;
+    width: 90%;
   }
   #banner-overlay.show {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
+    transform: translate(-50%, -50%) scale(1.06);
   }
 
   /* KNOCKDOWN MINIGAME */
@@ -499,12 +566,67 @@
     box-shadow: 0 0 8px #fff;
   }
 
-  /* FIGHT CONTROLS */
+  /* FIGHT CONTROLS (UFC STYLE: FOOTWORK + HEAD MOVEMENT + PUNCHES) */
   .controls-deck {
     background: #10141d;
     border-top: 1px solid var(--border);
-    padding: 10px;
+    padding: 8px 10px 10px;
     z-index: 10;
+  }
+  .footwork-bar {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    gap: 7px;
+    max-width: 600px;
+    margin: 0 auto 7px;
+  }
+  .move-btn {
+    background: #192132;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    padding: 7px 6px;
+    color: #e2e8f0;
+    font-weight: 800;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  .move-btn:active, .move-btn.held {
+    background: #2563eb;
+    border-color: #60a5fa;
+    color: #fff;
+  }
+  .dist-indicator {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+  }
+  .dist-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .dist-bar-bg {
+    width: 80%;
+    height: 4px;
+    background: #1e293b;
+    border-radius: 2px;
+    margin-top: 3px;
+    overflow: hidden;
+  }
+  .dist-bar-fill {
+    height: 100%;
+    background: #10b981;
+    transition: width 0.1s, background 0.2s;
   }
   .ctrl-grid {
     display: grid;
@@ -517,7 +639,7 @@
     background: var(--panel2);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 10px 4px;
+    padding: 9px 4px;
     color: #fff;
     font-weight: 800;
     font-size: 12px;
@@ -581,7 +703,7 @@
 <div id="auth-screen">
   <div class="auth-card">
     <div class="brand-title">Kaputkin Boxing Gym</div>
-    <div class="brand-sub">Онлайн симулятор бокса • v1.1</div>
+    <div class="brand-sub">Онлайн симулятор бокса • v1.2</div>
     <div class="input-group">
       <label>Никнейм бойца</label>
       <input type="text" id="auth-login" placeholder="Например: Tyson_2026" maxlength="16">
@@ -602,7 +724,10 @@
     <div class="player-pill">
       <div class="avatar-badge" id="hdr-avatar">K</div>
       <div>
-        <div class="p-name" id="hdr-name">Боец</div>
+        <div class="p-name">
+          <span id="hdr-name">Боец</span>
+          <span class="rank-pill" id="hdr-rank">Новичок</span>
+        </div>
         <div class="p-record" id="hdr-record">0W - 0L (0 KO)</div>
       </div>
     </div>
@@ -614,7 +739,7 @@
 
   <nav>
     <button class="nav-btn active" onclick="switchTab('career', this)">🥊 Бойцы</button>
-    <button class="nav-btn" onclick="switchTab('pvp', this)">🌐 Онлайн</button>
+    <button class="nav-btn" onclick="switchTab('pvp', this)">🏆 Рейтинг</button>
     <button class="nav-btn" onclick="switchTab('gym', this)">🏋️ Зал</button>
     <button class="nav-btn" onclick="switchTab('shop', this)">🎨 Стиль</button>
     <button class="nav-btn" onclick="switchTab('social', this)">💬 Топ/Чат</button>
@@ -638,40 +763,51 @@
         <div id="ai-list"></div>
       </div>
       <div class="card" style="font-size:12px;color:var(--muted);line-height:1.5">
-        <b style="color:#fff">Тактика против профи:</b><br>
-        • Против <b>нокаутеров</b> (Тайсон, Уайлдер, Бетербиев) держи дистанцию джебом и лови на отклон.<br>
-        • Против <b>игровиков</b> (Мейвезер, Усик, Ломаченко) работай по корпусу, чтобы сбить им темп.<br>
-        • <b>Апперкот</b> наносит крит ×1.65, если соперник нырнул вниз.
+        <b style="color:#fff">Тактика в стиле UFC 6:</b><br>
+        • <b>Футворк (Вперёд / Назад):</b> разрывай дистанцию от хуков и апперкотов или подшагивай для мощной серии.<br>
+        • <b>Визуальные уклоны (Отклон / Нырок):</b> тайминговый уклон даёт контр-атаку ×1.8 урона.<br>
+        • <b>Апперкот</b> ловит ныряющего соперника на крит ×1.65.
       </div>
     </div>
 
-    <!-- TAB: PVP ONLINE -->
+    <!-- TAB: RANKED MATCHMAKING (60 SEC SEARCH + SMART AI FALLBACK) -->
     <div id="tab-pvp" class="tab-pane hidden">
-      <div class="card">
-        <div class="card-title">
-          <span>Онлайн Ринг (PvP 1 на 1)</span>
-          <span id="pvp-status-dot" style="font-size:12px;color:var(--green)">● Сеть активна</span>
+      <div class="ranked-box">
+        <div class="rank-emblem" id="rnk-emblem">🥉</div>
+        <div class="rank-title" id="rnk-title">Бронзовый претендент</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px" id="rnk-elo-sub">1000 ELO • До следующего ранга: 150 ELO</div>
+        <div class="rank-progress-wrap">
+          <div class="rank-progress-fill" id="rnk-progress" style="width:20%"></div>
         </div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
-          Победа решается только твоей прокачкой в зале и таймингами — экипировка чисто визуальная!
-        </p>
-        <div id="pvp-host-box">
-          <button class="btn btn-primary" onclick="createPvpRoom()">🔥 Бросить вызов (Создать комнату)</button>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:14px">
+          Победа в рейтинге: <b>+25 ELO</b> и <b>+400 $</b> • Экипировка не даёт бонусов к статам
         </div>
-        <div id="pvp-waiting-box" class="hidden" style="text-align:center;padding:12px;background:var(--panel2);border-radius:10px;margin-top:8px">
-          <div style="font-weight:700;color:var(--gold);margin-bottom:6px">⏳ Ожидание соперника на ринге...</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Другой игрок увидит твой вызов в списке ниже</div>
-          <button class="btn btn-secondary btn-sm" onclick="cancelPvpRoom()">Отменить вызов</button>
+
+        <div id="ranked-idle-box">
+          <button class="btn btn-primary" onclick="startRankedSearch()">🔥 НАЙТИ РЕЙТИНГОВЫЙ БОЙ</button>
+        </div>
+
+        <div id="ranked-searching-box" class="hidden">
+          <div style="font-size:13px;font-weight:700;color:#e5e7eb">
+            <span class="pulse-dot"></span>Поиск реального соперника в сети...
+          </div>
+          <div class="search-timer" id="ranked-timer">01:00</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">
+            Если за 60 сек. никого не найдётся — на ринг выйдет умный спарринг-бот твоего ранга!
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="cancelRankedSearch()">Отменить поиск</button>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">
-          <span>Открытые вызовы</span>
-          <button class="btn btn-secondary btn-sm" style="padding:4px 10px;font-size:11px" onclick="loadPvpRooms()">Обновить</button>
-        </div>
-        <div id="pvp-rooms-list">
-          <p style="color:var(--muted);font-size:13px">Загрузка списка боев...</p>
+        <div class="card-title"><span>🎖️ Таблица рангов лиги</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">
+          <div class="ms-chip">🥊 Новичок: 0 – 999 ELO</div>
+          <div class="ms-chip">🥉 Бронза: 1000 – 1149 ELO</div>
+          <div class="ms-chip">🥈 Серебро: 1150 – 1349 ELO</div>
+          <div class="ms-chip">🥇 Золото: 1350 – 1599 ELO</div>
+          <div class="ms-chip">💎 Платина: 1600 – 1899 ELO</div>
+          <div class="ms-chip">👑 Чемпион мира: 1900+ ELO</div>
         </div>
       </div>
     </div>
@@ -787,10 +923,29 @@
   </div>
 
   <div class="controls-deck">
+    <!-- FOOTWORK & DISTANCE BAR -->
+    <div class="footwork-bar">
+      <button class="move-btn" id="btn-move-back"
+        onmousedown="setMoveDir(-1)" onmouseup="setMoveDir(0)" onmouseleave="setMoveDir(0)"
+        ontouchstart="event.preventDefault();setMoveDir(-1)" ontouchend="event.preventDefault();setMoveDir(0)">
+        ◀ НАЗАД (←)
+      </button>
+      <div class="dist-indicator">
+        <div class="dist-label" id="hud-dist-label" style="color:#10b981">СРЕДНЯЯ ДИСТАНЦИЯ</div>
+        <div class="dist-bar-bg"><div class="dist-bar-fill" id="hud-dist-bar" style="width:45%"></div></div>
+      </div>
+      <button class="move-btn" id="btn-move-fwd"
+        onmousedown="setMoveDir(1)" onmouseup="setMoveDir(0)" onmouseleave="setMoveDir(0)"
+        ontouchstart="event.preventDefault();setMoveDir(1)" ontouchend="event.preventDefault();setMoveDir(0)">
+        ВПЕРЁД (→) ▶
+      </button>
+    </div>
+
+    <!-- PUNCHES & HEAD MOVEMENT -->
     <div class="ctrl-grid">
       <button class="act-btn" onclick="playerAction('jab')">
         👊 ДЖЕБ
-        <span class="sub">Быстрый (Q)</span>
+        <span class="sub">Дальний (Q)</span>
       </button>
       <button class="act-btn" onclick="playerAction('cross')">
         💥 КРОСС
@@ -798,7 +953,7 @@
       </button>
       <button class="act-btn heavy" onclick="playerAction('hook')">
         🪝 ХУК
-        <span class="sub">Пробой (E)</span>
+        <span class="sub">Ближний (E)</span>
       </button>
       <button class="act-btn heavy" onclick="playerAction('uppercut')">
         🚀 АППЕРКОТ
@@ -840,6 +995,30 @@
 <script>
 const DB_URL = "https://kaputkin-boxing-gym-default-rtdb.europe-west1.firebasedatabase.app";
 
+// --- RANKS SYSTEM ---
+const RANKS = [
+  { min: 0,    max: 999,  name: 'Новичок',              icon: '🥊' },
+  { min: 1000, max: 1149, name: 'Бронзовый претендент', icon: '🥉' },
+  { min: 1150, max: 1349, name: 'Серебряный боец',      icon: '🥈' },
+  { min: 1350, max: 1599, name: 'Золотой контендер',    icon: '🥇' },
+  { min: 1600, max: 1899, name: 'Платиновый мастер',    icon: '💎' },
+  { min: 1900, max: 99999,name: 'Чемпион мира',         icon: '👑' }
+];
+
+function getRankInfo(elo) {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (elo >= RANKS[i].min && elo <= RANKS[i].max) {
+      const next = RANKS[i + 1];
+      const pct = next
+        ? Math.min(100, Math.max(5, ((elo - RANKS[i].min) / (next.min - RANKS[i].min)) * 100))
+        : 100;
+      const toNext = next ? (next.min - elo) : 0;
+      return { ...RANKS[i], pct, toNext, isMax: !next };
+    }
+  }
+  return { ...RANKS[0], pct: 100, toNext: 0, isMax: true };
+}
+
 // --- REAL WORLD BOXERS ROSTER (16 FIGHTERS) ---
 const REAL_BOXERS = [
   // LIGHT / WELTERWEIGHT
@@ -852,7 +1031,7 @@ const REAL_BOXERS = [
   },
   {
     id: 'haney', div: 'light', name: 'Девин Хейни', nick: 'The Dream',
-    style: 'Длинный джеб, осторожный бокс с дистанции и клинч-блок',
+    style: 'Длинный джеб, осторожный бокс с дальней дистанции и клинч-блок',
     aiTendency: 'outboxer', skin: '#7c4d34', hair: '#111827',
     hp: 105, power: 9, speed: 1.22, stam: 125, chin: 9, reward: 175,
     color: '#10b981', gloves: '#f8fafc'
@@ -889,21 +1068,21 @@ const REAL_BOXERS = [
   },
   {
     id: 'golovkin', div: 'middle', name: 'Геннадий Головкин', nick: 'GGG',
-    style: 'Бетонный подбородок, тяжелый джеб и постоянный прессинг',
+    style: 'Бетонный подбородок, тяжелый джеб и постоянный прессинг вперёд',
     aiTendency: 'pressure', skin: '#e6b08a', hair: '#1f2937',
     hp: 180, power: 21, speed: 1.12, stam: 165, chin: 24, reward: 560,
     color: '#1d4ed8', gloves: '#ef4444'
   },
   {
     id: 'bivol', div: 'middle', name: 'Дмитрий Бивол', nick: 'Precision',
-    style: 'Идеальный челнок, серийные двойки и строгая защита',
+    style: 'Идеальный челнок вперёд-назад, серийные двойки и строгая защита',
     aiTendency: 'outboxer', skin: '#e8b896', hair: '#1f2937',
     hp: 175, power: 17, speed: 1.42, stam: 185, chin: 18, reward: 640,
     color: '#f8fafc', gloves: '#dc2626'
   },
   {
     id: 'beterbiev', div: 'middle', name: 'Артур Бетербиев', nick: '100% KO',
-    style: 'Ломает блок тяжелыми хуками и апперкотами с обеих рук',
+    style: 'Ломает блок тяжелыми хуками и апперкотами на ближней дистанции',
     aiTendency: 'pressure', skin: '#e0a882', hair: '#111827',
     hp: 190, power: 25, speed: 1.15, stam: 175, chin: 20, reward: 740,
     color: '#991b1b', gloves: '#111827'
@@ -912,7 +1091,7 @@ const REAL_BOXERS = [
   // HEAVYWEIGHT
   {
     id: 'wilder', div: 'heavy', name: 'Деонтей Уайлдер', nick: 'Bronze Bomber',
-    style: 'Правый кросс-пушка: может перевернуть бой одним попаданием',
+    style: 'Правый кросс-пушка с дальней дистанции: переворачивает бой одним ударом',
     aiTendency: 'sniper', skin: '#5c3824', hair: '#111827',
     hp: 185, power: 29, speed: 1.18, stam: 145, chin: 15, reward: 820,
     color: '#b45309', gloves: '#f59e0b'
@@ -933,7 +1112,7 @@ const REAL_BOXERS = [
   },
   {
     id: 'usyk', div: 'heavy', name: 'Александр Усик', nick: 'The Cat',
-    style: 'Бешеный темп все раунды, работа по корпусу и идеальный тайминг уклонов',
+    style: 'Бешеный темп, футворк, работа по корпусу и идеальный тайминг уклонов',
     aiTendency: 'technician', skin: '#e6b08a', hair: '#374151',
     hp: 220, power: 21, speed: 1.48, stam: 230, chin: 21, reward: 1200,
     color: '#1d4ed8', gloves: '#eab308'
@@ -942,21 +1121,21 @@ const REAL_BOXERS = [
   // LEGENDS OF BOXING
   {
     id: 'mayweather', div: 'legend', name: 'Флойд Мейвезер', nick: 'Money',
-    style: 'Неуловимая защита (Philly Shell), быстрые контр-джебы и кроссы',
+    style: 'Неуловимая защита, отклоны и молниеносные контр-кроссы',
     aiTendency: 'counter_puncher', skin: '#7c4d34', hair: '#111827',
     hp: 200, power: 19, speed: 1.62, stam: 220, chin: 20, reward: 1350,
     color: '#047857', gloves: '#f59e0b'
   },
   {
     id: 'ali', div: 'legend', name: 'Мохаммед Али', nick: 'The Greatest',
-    style: 'Порхает как бабочка: молниеносные отклоны и серии джебов',
+    style: 'Порхает как бабочка: постоянный отход назад, отклоны и серии джебов',
     aiTendency: 'outboxer', skin: '#75472f', hair: '#111827',
     hp: 240, power: 23, speed: 1.58, stam: 245, chin: 25, reward: 1600,
     color: '#f8fafc', gloves: '#dc2626'
   },
   {
     id: 'tyson', div: 'legend', name: 'Майк Тайсон (Пик)', nick: 'Iron Mike',
-    style: 'Стиль Пик-а-Бу: нырки и взрывные хуки + апперкоты с чудовищной силой',
+    style: 'Стиль Пик-а-Бу: сближение с нырками и взрывные хуки + апперкоты',
     aiTendency: 'peekaboo', skin: '#633c26', hair: '#111827',
     hp: 255, power: 33, speed: 1.52, stam: 215, chin: 24, reward: 2000,
     color: '#111827', gloves: '#111827'
@@ -982,7 +1161,7 @@ const SHORTS_SHOP = [
   { id: 's_gold', name: 'Чемпионское золото', price: 1000, color: '#d97706' }
 ];
 
-// --- USER STATE ---
+// --- USER & MATCHMAKING STATE ---
 let user = null;
 let currentDivFilter = 'all';
 let pvpRoomId = null;
@@ -990,6 +1169,11 @@ let pvpRole = null;
 let pvpPollTimer = null;
 let pvpLastEnemyActionId = 0;
 let chatPollTimer = null;
+
+let rankedSearching = false;
+let rankedSecondsLeft = 60;
+let rankedInterval = null;
+let rankedQueueKey = null;
 
 function defaultUserData(name, pass) {
   return {
@@ -1086,7 +1270,6 @@ async function handleAuth(mode) {
       }
       user = existing;
       user.key = key;
-      // Migrate old v1.0 gear IDs if needed
       if (!GLOVES_SHOP.some(g => g.id === user.eqGloves)) user.eqGloves = 'g_red';
       if (!SHORTS_SHOP.some(s => s.id === user.eqShorts)) user.eqShorts = 's_dark';
       if (!user.ownedGloves.includes('g_red')) user.ownedGloves.push('g_red');
@@ -1117,6 +1300,7 @@ async function autoLogin() {
 }
 
 function logout() {
+  cancelRankedSearch();
   localStorage.removeItem('kbg_session');
   location.reload();
 }
@@ -1153,28 +1337,38 @@ function enterApp() {
     if (!document.getElementById('tab-social').classList.contains('hidden')) {
       loadChat();
     }
-    if (!document.getElementById('tab-pvp').classList.contains('hidden') && !fight.active) {
-      checkPvpLobbyState();
-    }
-  }, 2500);
+  }, 3000);
 }
 
 function updateHeader() {
+  const rank = getRankInfo(user.elo);
   document.getElementById('hdr-avatar').textContent = user.name[0].toUpperCase();
   document.getElementById('hdr-name').textContent = user.name;
+  document.getElementById('hdr-rank').textContent = `${rank.icon} ${rank.name.split(' ')[0]}`;
   document.getElementById('hdr-record').textContent = `${user.wins}W - ${user.losses}L (${user.kos} KO)`;
   document.getElementById('hdr-money').textContent = user.money;
   document.getElementById('hdr-elo').textContent = user.elo;
   document.getElementById('gym-money').textContent = user.money;
+
+  // Update Ranked Card
+  document.getElementById('rnk-emblem').textContent = rank.icon;
+  document.getElementById('rnk-title').textContent = rank.name;
+  document.getElementById('rnk-elo-sub').textContent = rank.isMax
+    ? `${user.elo} ELO • Максимальный титул`
+    : `${user.elo} ELO • До следующего ранга: ${rank.toNext} ELO`;
+  document.getElementById('rnk-progress').style.width = rank.pct + '%';
 }
 
 function switchTab(tab, btn) {
+  if (rankedSearching && tab !== 'pvp') {
+    cancelRankedSearch();
+  }
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
   document.getElementById(`tab-${tab}`).classList.remove('hidden');
 
-  if (tab === 'pvp') loadPvpRooms();
+  if (tab === 'pvp') updateHeader();
   if (tab === 'gym') renderGym();
   if (tab === 'shop') renderShop();
   if (tab === 'social') { loadLeaderboard(); loadChat(); }
@@ -1233,8 +1427,8 @@ function renderGym() {
   updateHeader();
   const cfg = [
     { key: 'power', title: '💥 Сила удара', desc: 'Увеличивает урон всех ударов и пробой блока' },
-    { key: 'speed', title: '⚡ Скорость и рефлексы', desc: 'Быстрее удары, уклоны и восстановление' },
-    { key: 'stamina', title: '🫁 Выносливость (Кардио)', desc: 'Больше запас сил на затяжные серии' },
+    { key: 'speed', title: '⚡ Скорость и футворк', desc: 'Быстрее удары, передвижение по рингу и уклоны' },
+    { key: 'stamina', title: '🫁 Выносливость (Кардио)', desc: 'Больше запас сил на затяжные серии и шаги' },
     { key: 'chin', title: '🛡️ Держалка (Подбородок)', desc: 'Больше здоровья и защита от нокдаунов' }
   ];
   const list = document.getElementById('gym-stats-list');
@@ -1333,12 +1527,15 @@ async function loadLeaderboard() {
     return;
   }
   const arr = Object.values(data).sort((a, b) => b.elo - a.elo).slice(0, 10);
-  box.innerHTML = arr.map((p, idx) => `
-    <div style="display:flex;justify-content:space-between;padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px">
-      <span><b>#${idx + 1}</b> ${p.name} <span style="color:var(--muted);font-size:11px">(${p.wins}W-${p.losses}L)</span></span>
-      <span class="elo-txt" style="font-weight:700">🏆 ${p.elo}</span>
-    </div>
-  `).join('');
+  box.innerHTML = arr.map((p, idx) => {
+    const r = getRankInfo(p.elo);
+    return `
+      <div style="display:flex;justify-content:space-between;padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px">
+        <span><b>#${idx + 1}</b> ${r.icon} ${escapeHtml(p.name)} <span style="color:var(--muted);font-size:11px">(${p.wins}W-${p.losses}L)</span></span>
+        <span class="elo-txt" style="font-weight:700">🏆 ${p.elo}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 async function loadChat() {
@@ -1348,7 +1545,7 @@ async function loadChat() {
   const msgs = Object.values(data).slice(-25);
   box.innerHTML = msgs.map(m => {
     if (m.sys) return `<div class="chat-msg sys">${m.text}</div>`;
-    return `<div class="chat-msg"><b>${m.name}:</b> ${escapeHtml(m.text)}</div>`;
+    return `<div class="chat-msg"><b>${escapeHtml(m.name)}:</b> ${escapeHtml(m.text)}</div>`;
   }).join('');
   box.scrollTop = box.scrollHeight;
 }
@@ -1370,132 +1567,208 @@ function escapeHtml(str) {
   return str.replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 }
 
-// --- PVP ONLINE LOBBY ---
-async function loadPvpRooms() {
-  const rooms = await fbGet('pvp_rooms');
-  const list = document.getElementById('pvp-rooms-list');
-  if (!rooms) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:13px">Сейчас нет открытых вызовов. Создай свой!</p>';
-    return;
-  }
-  const now = Date.now();
-  const valid = Object.entries(rooms).filter(([id, r]) => r.status === 'waiting' && (now - r.createdAt < 120000));
-  if (valid.length === 0) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:13px">Сейчас нет открытых вызовов. Создай свой!</p>';
-    return;
-  }
-  list.innerHTML = valid.map(([id, r]) => `
-    <div class="opp-item">
-      <div class="opp-info">
-        <h4>${escapeHtml(r.host.name)} <span style="color:#60a5fa;font-size:12px">(🏆 ${r.host.elo})</span></h4>
-        <p>Сила: ${Math.round(r.host.stats.power)} • HP: ${Math.round(r.host.stats.maxHp)}</p>
-      </div>
-      ${r.host.key === user.key
-        ? '<span style="font-size:12px;color:var(--gold)">Твой вызов</span>'
-        : `<button class="btn btn-green btn-sm" onclick="joinPvpRoom('${id}')">Принять бой</button>`
-      }
-    </div>
-  `).join('');
-}
+// --- RANKED MATCHMAKING (60 SEC SEARCH -> SMART AI FALLBACK) ---
+async function startRankedSearch() {
+  if (rankedSearching) return;
+  rankedSearching = true;
+  rankedSecondsLeft = 60;
+  document.getElementById('ranked-idle-box').classList.add('hidden');
+  document.getElementById('ranked-searching-box').classList.remove('hidden');
+  updateRankedTimerUI();
 
-async function createPvpRoom() {
   const pStats = getPlayerComputedStats();
-  const roomData = {
-    status: 'waiting',
-    createdAt: Date.now(),
-    host: {
+  const now = Date.now();
+
+  try {
+    // 1. Check if another player is already waiting in ranked_queue
+    const queue = await fbGet('ranked_queue');
+    if (queue) {
+      const entries = Object.entries(queue).filter(([k, q]) =>
+        k !== user.key &&
+        q.status === 'searching' &&
+        (now - q.ts < 65000) &&
+        Math.abs(q.elo - user.elo) <= 450
+      );
+      if (entries.length > 0) {
+        // Found a real player! Create match room and join as guest
+        const [oppKey, oppEntry] = entries[0];
+        const roomData = {
+          status: 'fighting',
+          ranked: true,
+          createdAt: Date.now(),
+          host: {
+            key: oppEntry.key,
+            name: oppEntry.name,
+            elo: oppEntry.elo,
+            stats: oppEntry.stats,
+            hp: oppEntry.stats.maxHp,
+            stam: oppEntry.stats.maxStam,
+            blockHp: 100,
+            pos: -85,
+            actionId: 0,
+            lastAction: null,
+            kdCount: 0
+          },
+          guest: {
+            key: user.key,
+            name: user.name,
+            elo: user.elo,
+            stats: pStats,
+            hp: pStats.maxHp,
+            stam: pStats.maxStam,
+            blockHp: 100,
+            pos: 85,
+            actionId: 0,
+            lastAction: null,
+            kdCount: 0
+          }
+        };
+        const roomRes = await fbPost('pvp_rooms', roomData);
+        await fbPatch(`ranked_queue/${oppKey}`, { status: 'matched', roomId: roomRes.name });
+
+        stopRankedSearchUI();
+        pvpRoomId = roomRes.name;
+        pvpRole = 'guest';
+        startPvpFight(roomData, true);
+        return;
+      }
+    }
+
+    // 2. No opponent right now -> register ourselves in ranked_queue
+    rankedQueueKey = user.key;
+    await fbPut(`ranked_queue/${user.key}`, {
       key: user.key,
       name: user.name,
       elo: user.elo,
       stats: pStats,
-      hp: pStats.maxHp,
-      stam: pStats.maxStam,
-      blockHp: 100,
-      actionId: 0,
-      lastAction: null,
-      kdCount: 0
-    },
-    guest: null
-  };
-  const res = await fbPost('pvp_rooms', roomData);
-  pvpRoomId = res.name;
-  pvpRole = 'host';
-  document.getElementById('pvp-host-box').classList.add('hidden');
-  document.getElementById('pvp-waiting-box').classList.remove('hidden');
-  loadPvpRooms();
-}
+      status: 'searching',
+      roomId: null,
+      ts: Date.now()
+    });
+  } catch (e) {}
 
-async function cancelPvpRoom() {
-  if (pvpRoomId) {
-    await fbDelete(`pvp_rooms/${pvpRoomId}`);
-    pvpRoomId = null;
-    pvpRole = null;
-  }
-  document.getElementById('pvp-host-box').classList.remove('hidden');
-  document.getElementById('pvp-waiting-box').classList.add('hidden');
-  loadPvpRooms();
-}
+  // 3. Countdown 60 seconds, polling every 2 seconds for real opponent
+  rankedInterval = setInterval(async () => {
+    if (!rankedSearching) return;
+    rankedSecondsLeft -= 1;
+    updateRankedTimerUI();
 
-async function checkPvpLobbyState() {
-  if (pvpRoomId && pvpRole === 'host') {
-    const room = await fbGet(`pvp_rooms/${pvpRoomId}`);
-    if (room && room.status === 'fighting' && room.guest) {
-      document.getElementById('pvp-host-box').classList.remove('hidden');
-      document.getElementById('pvp-waiting-box').classList.add('hidden');
-      startPvpFight(room);
+    // Poll every 2 seconds
+    if (rankedSecondsLeft % 2 === 0 && rankedQueueKey) {
+      try {
+        await fbPatch(`ranked_queue/${rankedQueueKey}`, { ts: Date.now() });
+        const myQ = await fbGet(`ranked_queue/${rankedQueueKey}`);
+        if (myQ && myQ.status === 'matched' && myQ.roomId) {
+          const room = await fbGet(`pvp_rooms/${myQ.roomId}`);
+          await fbDelete(`ranked_queue/${rankedQueueKey}`);
+          stopRankedSearchUI();
+          if (room && room.guest) {
+            pvpRoomId = myQ.roomId;
+            pvpRole = 'host';
+            startPvpFight(room, true);
+            return;
+          }
+        }
+      } catch (e) {}
     }
-  } else {
-    loadPvpRooms();
+
+    // 60 seconds elapsed -> spawn smart AI opponent scaled to user's ELO & stats!
+    if (rankedSecondsLeft <= 0) {
+      await cancelRankedSearch(true);
+      launchSmartRankedAi();
+    }
+  }, 1000);
+}
+
+function updateRankedTimerUI() {
+  const m = String(Math.floor(rankedSecondsLeft / 60)).padStart(2, '0');
+  const s = String(rankedSecondsLeft % 60).padStart(2, '0');
+  document.getElementById('ranked-timer').textContent = `${m}:${s}`;
+}
+
+function stopRankedSearchUI() {
+  rankedSearching = false;
+  if (rankedInterval) {
+    clearInterval(rankedInterval);
+    rankedInterval = null;
+  }
+  document.getElementById('ranked-idle-box').classList.remove('hidden');
+  document.getElementById('ranked-searching-box').classList.add('hidden');
+}
+
+async function cancelRankedSearch(silent = false) {
+  stopRankedSearchUI();
+  if (rankedQueueKey) {
+    try { await fbDelete(`ranked_queue/${rankedQueueKey}`); } catch (e) {}
+    rankedQueueKey = null;
   }
 }
 
-async function joinPvpRoom(roomId) {
-  const room = await fbGet(`pvp_rooms/${roomId}`);
-  if (!room || room.status !== 'waiting') {
-    alert('Этот бой уже начался или отменен.');
-    loadPvpRooms();
-    return;
-  }
+function launchSmartRankedAi() {
   const pStats = getPlayerComputedStats();
-  const guestData = {
-    key: user.key,
-    name: user.name,
-    elo: user.elo,
-    stats: pStats,
-    hp: pStats.maxHp,
-    stam: pStats.maxStam,
-    blockHp: 100,
-    actionId: 0,
-    lastAction: null,
-    kdCount: 0
+  const rank = getRankInfo(user.elo);
+  const botNames = [
+    'Дмитрий_Волк', 'Khabib_Boxing', 'Артем_Тайсон', 'Max_Holloway_RU',
+    'Сергей_Ковалев', 'Sanya_Bivol', 'Den_Wilder', 'Ilya_Topuria_Box'
+  ];
+  const tendencies = ['counter_puncher', 'technician', 'pressure', 'outboxer', 'peekaboo'];
+  const botName = botNames[Math.floor(Math.random() * botNames.length)];
+  const botTendency = tendencies[Math.floor(Math.random() * tendencies.length)];
+  const botElo = Math.max(850, user.elo + Math.floor((Math.random() - 0.45) * 90));
+
+  // Scale slightly by ELO rank
+  const scale = 0.96 + Math.min(0.22, Math.max(0, (user.elo - 900) / 4500));
+
+  const smartAi = {
+    id: 'ranked_bot',
+    name: `${botName} [${botElo}]`,
+    nick: rank.name,
+    hp: Math.round(pStats.maxHp * scale),
+    power: Number((pStats.power * scale).toFixed(1)),
+    speed: Number(Math.min(1.65, pStats.speed * (0.98 + Math.random() * 0.1)).toFixed(2)),
+    stam: Math.round(pStats.maxStam * scale),
+    chin: Math.round(pStats.chin * scale),
+    reward: 400,
+    color: '#1d4ed8',
+    gloves: '#f59e0b',
+    skin: '#d9a077',
+    hair: '#111827',
+    aiTendency: botTendency
   };
-  await fbPatch(`pvp_rooms/${roomId}`, { status: 'fighting', guest: guestData });
-  room.guest = guestData;
-  room.status = 'fighting';
-  pvpRoomId = roomId;
-  pvpRole = 'guest';
-  startPvpFight(room);
+
+  fight.mode = 'ranked_ai';
+  fight.aiData = smartAi;
+  fight.p1 = createFighterObj(user.name, pStats, pStats.shortsColor, pStats.glovesColor, true);
+  fight.p2 = createFighterObj(smartAi.name, {
+    maxHp: smartAi.hp, power: smartAi.power, speed: smartAi.speed, maxStam: smartAi.stam, chin: smartAi.chin
+  }, smartAi.color, smartAi.gloves, false, { skin: smartAi.skin, hair: smartAi.hair, aiTendency: smartAi.aiTendency });
+
+  document.getElementById('hud-mode').textContent = `РЕЙТИНГ • ${rank.icon}`;
+  launchArena();
+  showBanner('СОПЕРНИК НАЙДЕН! РЕЙТИНГОВЫЙ БОЙ!', '#f59e0b');
 }
 
 // =========================================================================
-// FIGHT ENGINE (2.5D CANVAS + UFC/FIGHT NIGHT MECHANICS)
+// FIGHT ENGINE (UFC 6 STYLE: FOOTWORK + VISIBLE SLIPS + RANGE MECHANICS)
 // =========================================================================
 const canvas = document.getElementById('ringCanvas');
 const ctx = canvas.getContext('2d');
 
+// Each move now has minDist / maxDist (ring pixels between fighters)!
 const MOVES = {
-  jab:      { dmg: 0.75, stam: 7,  windup: 140, active: 130, rec: 150, reach: 95,  type: 'high', name: 'ДЖЕБ' },
-  cross:    { dmg: 1.15, stam: 13, windup: 220, active: 150, rec: 220, reach: 105, type: 'high', name: 'КРОСС' },
-  hook:     { dmg: 1.45, stam: 18, windup: 290, active: 160, rec: 270, reach: 90,  type: 'hook', name: 'ХУК' },
-  uppercut: { dmg: 1.65, stam: 21, windup: 320, active: 160, rec: 300, reach: 82,  type: 'upper',name: 'АППЕРКОТ' },
-  body:     { dmg: 0.90, stam: 14, windup: 210, active: 150, rec: 210, reach: 92,  type: 'body', name: 'В КОРПУС' },
-  lean:     { dmg: 0,    stam: 9,  windup: 40,  active: 360, rec: 140, reach: 0,   type: 'dodge',name: 'ОТКЛОН' },
-  duck:     { dmg: 0,    stam: 10, windup: 40,  active: 380, rec: 150, reach: 0,   type: 'dodge',name: 'НЫРОК' }
+  jab:      { dmg: 0.78, stam: 7,  windup: 135, active: 130, rec: 145, minDist: 45, maxDist: 175, lunge: 14, type: 'high', name: 'ДЖЕБ' },
+  cross:    { dmg: 1.18, stam: 13, windup: 215, active: 150, rec: 210, minDist: 50, maxDist: 185, lunge: 22, type: 'high', name: 'КРОСС' },
+  hook:     { dmg: 1.48, stam: 18, windup: 280, active: 160, rec: 260, minDist: 38, maxDist: 132, lunge: 16, type: 'hook', name: 'ХУК' },
+  uppercut: { dmg: 1.68, stam: 21, windup: 310, active: 160, rec: 290, minDist: 35, maxDist: 122, lunge: 18, type: 'upper',name: 'АППЕРКОТ' },
+  body:     { dmg: 0.94, stam: 14, windup: 205, active: 150, rec: 205, minDist: 40, maxDist: 148, lunge: 18, type: 'body', name: 'В КОРПУС' },
+  lean:     { dmg: 0,    stam: 8,  windup: 35,  active: 410, rec: 130, minDist: 0,  maxDist: 999, lunge: -12,type: 'dodge',name: 'ОТКЛОН' },
+  duck:     { dmg: 0,    stam: 9,  windup: 35,  active: 420, rec: 140, minDist: 0,  maxDist: 999, lunge: 8,  type: 'dodge',name: 'НЫРОК' }
 };
 
 let fight = {
   active: false,
-  mode: 'ai',
+  mode: 'ai', // 'ai', 'ranked_ai', 'pvp'
+  isRanked: false,
   aiData: null,
   round: 1,
   maxRounds: 3,
@@ -1508,6 +1781,7 @@ let fight = {
   floatingTexts: [],
   p1: null,
   p2: null,
+  playerMoveDir: 0, // -1 back, 0 hold, 1 forward
   kdActive: false,
   kdCount: 0,
   kdTimer: 0,
@@ -1544,12 +1818,16 @@ function createFighterObj(name, stats, shortsColor, glovesColor, isPlayer, appea
     skinColor: appearance.skin || '#e0a37b',
     hairColor: appearance.hair || '#1f2937',
     aiTendency: appearance.aiTendency || 'balanced',
-    xOffset: 0,
+    // Ring position relative to center (-220 to +220)
+    pos: isPlayer ? -68 : 68,
+    moveDir: 0,
+    stepPhase: 0,
     yOffset: 0,
     headTilt: 0,
+    slipShiftX: 0,
     punchExt: 0,
     punchHeight: 0,
-    aiNextThink: 600
+    aiNextThink: 550
   };
 }
 
@@ -1557,6 +1835,7 @@ function startAiFight(aiId) {
   const ai = REAL_BOXERS.find(x => x.id === aiId);
   const pStats = getPlayerComputedStats();
   fight.mode = 'ai';
+  fight.isRanked = false;
   fight.aiData = ai;
   fight.p1 = createFighterObj(user.name, pStats, pStats.shortsColor, pStats.glovesColor, true);
   fight.p2 = createFighterObj(ai.name, {
@@ -1567,21 +1846,22 @@ function startAiFight(aiId) {
   launchArena();
 }
 
-function startPvpFight(room) {
+function startPvpFight(room, isRanked = true) {
   const me = pvpRole === 'host' ? room.host : room.guest;
   const opp = pvpRole === 'host' ? room.guest : room.host;
 
   fight.mode = 'pvp';
+  fight.isRanked = isRanked;
   fight.aiData = null;
   fight.p1 = createFighterObj(me.name, me.stats, me.stats.shortsColor || '#dc2626', me.stats.glovesColor || '#ef4444', true);
   fight.p2 = createFighterObj(opp.name, opp.stats, opp.stats.shortsColor || '#2563eb', opp.stats.glovesColor || '#f59e0b', false);
   pvpLastEnemyActionId = opp.actionId || 0;
 
-  document.getElementById('hud-mode').textContent = 'ОНЛАЙН PvP';
+  document.getElementById('hud-mode').textContent = 'РЕЙТИНГ PvP';
   launchArena();
 
   if (pvpPollTimer) clearInterval(pvpPollTimer);
-  pvpPollTimer = setInterval(syncPvpLoop, 220);
+  pvpPollTimer = setInterval(syncPvpLoop, 200);
 }
 
 function launchArena() {
@@ -1592,6 +1872,7 @@ function launchArena() {
   fight.floatingTexts = [];
   fight.kdActive = false;
   fight.slowMo = 1.0;
+  fight.playerMoveDir = 0;
 
   document.getElementById('hud-p1-name').textContent = fight.p1.name;
   document.getElementById('hud-p2-name').textContent = fight.p2.name;
@@ -1638,7 +1919,15 @@ function spawnSweatAndSparks(x, y, color, count = 10) {
   }
 }
 
-// --- PLAYER INPUTS ---
+// --- PLAYER INPUTS (FOOTWORK, BLOCK, HEAD MOVEMENT, PUNCHES) ---
+function setMoveDir(dir) {
+  if (!fight.active || fight.kdActive) return;
+  fight.playerMoveDir = dir;
+  fight.p1.moveDir = dir;
+  document.getElementById('btn-move-back').classList.toggle('held', dir === -1);
+  document.getElementById('btn-move-fwd').classList.toggle('held', dir === 1);
+}
+
 function setBlock(state) {
   if (!fight.active || fight.kdActive) return;
   if (fight.p1.blockHp <= 5 && state) return;
@@ -1660,6 +1949,8 @@ function playerAction(moveKey) {
 document.addEventListener('keydown', e => {
   if (!fight.active) return;
   const k = e.key.toLowerCase();
+  if (e.key === 'ArrowLeft')  setMoveDir(-1);
+  if (e.key === 'ArrowRight') setMoveDir(1);
   if (k === 'q') playerAction('jab');
   if (k === 'w') playerAction('cross');
   if (k === 'e') playerAction('hook');
@@ -1671,7 +1962,13 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => {
   if (e.key.toLowerCase() === 's') setBlock(false);
+  if (e.key === 'ArrowLeft' && fight.playerMoveDir === -1) setMoveDir(0);
+  if (e.key === 'ArrowRight' && fight.playerMoveDir === 1) setMoveDir(0);
 });
+
+function getFightersDist() {
+  return Math.abs(fight.p2.pos - fight.p1.pos);
+}
 
 function triggerMove(actor, target, moveKey) {
   if (actor.state !== 'idle' && actor.state !== 'recover') return;
@@ -1687,6 +1984,11 @@ function triggerMove(actor, target, moveKey) {
   actor.move = moveKey;
   actor.hitDealt = false;
 
+  // Step-in lunge on punches or step-back on lean
+  const dirSign = actor.isPlayer ? 1 : -1;
+  actor.pos += dirSign * m.lunge;
+  clampRingPositions();
+
   const spdFactor = Math.max(0.65, actor.speed * (0.55 + 0.45 * (actor.stam / actor.maxStam)));
   actor.state = 'windup';
   actor.stateTimer = m.windup / spdFactor;
@@ -1701,7 +2003,19 @@ function triggerMove(actor, target, moveKey) {
   }
 }
 
-// --- COMBAT RESOLUTION ---
+function clampRingPositions() {
+  const minSep = 54;
+  const maxArena = 195;
+  fight.p1.pos = Math.max(-maxArena, Math.min(maxArena - minSep, fight.p1.pos));
+  fight.p2.pos = Math.min(maxArena, Math.max(-maxArena + minSep, fight.p2.pos));
+  if (fight.p2.pos - fight.p1.pos < minSep) {
+    const mid = (fight.p1.pos + fight.p2.pos) / 2;
+    fight.p1.pos = mid - minSep / 2;
+    fight.p2.pos = mid + minSep / 2;
+  }
+}
+
+// --- COMBAT RESOLUTION (WITH DISTANCE & SLIP CHECKS) ---
 function resolveStrike(attacker, defender) {
   const m = MOVES[attacker.move];
   if (!m || m.dmg <= 0) return;
@@ -1709,34 +2023,50 @@ function resolveStrike(attacker, defender) {
   const wrap = document.getElementById('ring-wrap');
   const cx = wrap.clientWidth / 2;
   const cy = wrap.clientHeight * 0.52;
-  const hitX = defender.isPlayer ? cx - 45 : cx + 45;
+  const hitX = cx + defender.pos;
   const hitY = m.type === 'body' ? cy + 20 : cy - 35;
 
-  // 1. Check Dodges
+  const dist = getFightersDist();
+
+  // 0. Check Range (Footwork matters!)
+  if (dist > m.maxDist) {
+    addFloatingText(hitX, hitY - 25, 'МИМО (ДАЛЕКО)!', '#9ca3af');
+    return;
+  }
+
+  // 1. Check Dodges (Visible head movement!)
   if (defender.state === 'lean' && (m.type === 'high' || m.type === 'hook' || m.type === 'upper')) {
-    addFloatingText(hitX, hitY - 30, 'УКЛОН!', '#34d399');
+    addFloatingText(hitX, hitY - 32, 'УКЛОН!', '#34d399');
     return;
   }
   if (defender.state === 'duck' && (m.type === 'high' || m.type === 'hook')) {
-    addFloatingText(hitX, hitY - 30, 'НЫРОК!', '#34d399');
+    addFloatingText(hitX, hitY - 32, 'НЫРОК!', '#34d399');
     return;
   }
 
   let dmg = attacker.power * m.dmg;
   let isCrit = false;
 
+  // Sweet-spot range bonus
+  if (m.type === 'jab' && dist >= 115 && dist <= 165) {
+    dmg *= 1.15;
+  }
+  if ((m.type === 'hook' || m.type === 'upper') && dist <= 95) {
+    dmg *= 1.15;
+  }
+
   // Uppercut catches ducking opponent!
   if (m.type === 'upper' && defender.state === 'duck') {
     dmg *= 1.65;
     isCrit = true;
-    addFloatingText(hitX, hitY - 45, 'ПОЙМАЛ НА НЫРКЕ! КРИТ!', '#f59e0b');
+    addFloatingText(hitX, hitY - 48, 'ПОЙМАЛ НА НЫРКЕ! КРИТ!', '#f59e0b');
   }
   // Counter attack bonus
   if (attacker.counterBonus > 0) {
     dmg *= 1.8;
     isCrit = true;
     attacker.counterBonus = 0;
-    addFloatingText(hitX, hitY - 45, 'КОНТР-УДАР ×1.8!', '#10b981');
+    addFloatingText(hitX, hitY - 48, 'КОНТР-УДАР ×1.8!', '#10b981');
   }
   // Hit during windup (interrupt)
   if (defender.state === 'windup' && m.type !== 'body') {
@@ -1751,6 +2081,9 @@ function resolveStrike(attacker, defender) {
     defender.blockHp = Math.max(0, defender.blockHp - blockBreak);
     const chipDmg = dmg * 0.18;
     defender.hp = Math.max(0, defender.hp - chipDmg);
+    // Push back slightly on block
+    defender.pos += (defender.isPlayer ? -8 : 8);
+    clampRingPositions();
     spawnSweatAndSparks(hitX, hitY, '#38bdf8', 7);
     addFloatingText(hitX, hitY - 15, defender.blockHp <= 0 ? 'БЛОК ПРОБИТ!' : 'БЛОК', '#38bdf8');
     if (defender.blockHp <= 0) {
@@ -1765,6 +2098,8 @@ function resolveStrike(attacker, defender) {
   const finalDmg = Math.max(2, dmg * (100 / (100 + defender.chin * 1.5)));
   defender.hp = Math.max(0, defender.hp - finalDmg);
   defender.bruise = Math.min(1, defender.bruise + finalDmg / (defender.maxHp * 0.7));
+  defender.pos += (defender.isPlayer ? -12 : 12);
+  clampRingPositions();
 
   if (m.type === 'body') {
     defender.stam = Math.max(0, defender.stam - finalDmg * 1.35);
@@ -1785,6 +2120,7 @@ function handleKnockdown(fallen, winner) {
   fallen.kdThisRound += 1;
   fallen.totalKd += 1;
   fallen.state = 'knocked';
+  fallen.moveDir = 0;
   fight.slowMo = 0.3;
   fight.slowMoTimer = 800;
   fight.shake = 16;
@@ -1795,6 +2131,7 @@ function handleKnockdown(fallen, winner) {
   }
 
   if (fallen.isPlayer) {
+    fight.playerMoveDir = 0;
     fight.kdActive = true;
     fight.kdCount = 1;
     fight.kdTimer = 0;
@@ -1809,7 +2146,7 @@ function handleKnockdown(fallen, winner) {
     document.getElementById('kd-number').textContent = '1';
     document.getElementById('kd-modal').classList.remove('hidden');
   } else {
-    if (fight.mode === 'ai') {
+    if (fight.mode === 'ai' || fight.mode === 'ranked_ai') {
       showBanner('НОКДАУН!', '#f59e0b');
       setTimeout(() => {
         if (!fight.active) return;
@@ -1818,6 +2155,8 @@ function handleKnockdown(fallen, winner) {
           fallen.hp = fallen.maxHp * (0.42 - fallen.totalKd * 0.08);
           fallen.stam = fallen.maxStam * 0.6;
           fallen.state = 'idle';
+          fight.p1.pos = -75;
+          fight.p2.pos = 75;
           showBanner('СОПЕРНИК ВСТАЛ! ПРОДОЛЖАЕМ!', '#fff');
         } else {
           endFight(true, `Нокаут в ${fight.round} раунде!`);
@@ -1841,8 +2180,10 @@ function tryStandUp() {
     fight.p1.hp = fight.p1.maxHp * Math.max(0.25, 0.48 - fight.p1.totalKd * 0.08);
     fight.p1.stam = fight.p1.maxStam * 0.65;
     fight.p1.state = 'idle';
+    fight.p1.pos = -75;
+    fight.p2.pos = 75;
     showBanner('ТЫ ВСТАЛ! ДЕРЖИСЬ!', '#10b981');
-    if (fight.mode === 'pvp') pushPvpState({ hp: fight.p1.hp, stam: fight.p1.stam, kdCount: fight.p1.totalKd });
+    if (fight.mode === 'pvp') pushPvpState({ hp: fight.p1.hp, stam: fight.p1.stam, kdCount: fight.p1.totalKd, pos: fight.p1.pos });
   } else {
     fight.kdCount += 1;
     document.getElementById('kd-number').textContent = fight.kdCount;
@@ -1854,54 +2195,92 @@ function tryStandUp() {
   }
 }
 
-// --- AI BRAIN WITH REAL FIGHTER STYLES ---
+// --- SMART AI BRAIN (FOOTWORK + STYLE-BASED TACTICS) ---
 function updateAi(dt) {
   const ai = fight.p2;
   const pl = fight.p1;
   if (ai.state === 'knocked') return;
 
+  const dist = getFightersDist();
+  const style = ai.aiTendency;
+
+  // Smart Footwork Decisions
+  if (ai.state === 'idle') {
+    if (ai.stam < 25) {
+      // Retreat when low on stamina
+      ai.moveDir = 1; // back for p2
+    } else if (style === 'peekaboo' || style === 'pressure' || style === 'body_snatcher') {
+      // Aggressive pressure fighters close distance
+      ai.moveDir = dist > 82 ? -1 : 0;
+    } else if (style === 'outboxer' || style === 'sniper') {
+      // Outboxers keep optimal jab/cross distance (125..155)
+      if (dist < 115) ai.moveDir = 1;
+      else if (dist > 160) ai.moveDir = -1;
+      else ai.moveDir = 0;
+    } else {
+      // Balanced / technician
+      if (dist > 130) ai.moveDir = -1;
+      else if (dist < 75) ai.moveDir = 1;
+      else ai.moveDir = 0;
+    }
+  } else {
+    ai.moveDir = 0;
+  }
+
   ai.aiNextThink -= dt;
   if (ai.aiNextThink > 0) return;
 
-  const baseDelay = Math.max(240, 760 / ai.speed);
-  ai.aiNextThink = baseDelay * (0.65 + Math.random() * 0.65);
+  const baseDelay = Math.max(230, 720 / ai.speed);
+  ai.aiNextThink = baseDelay * (0.65 + Math.random() * 0.6);
 
-  const style = ai.aiTendency;
-
-  // Defensive reactions tailored by style
-  if (pl.state === 'windup') {
+  // Defensive reactions when player attacks in range
+  if (pl.state === 'windup' && dist < 175) {
     const r = Math.random();
-    const dodgeSkill = (style === 'counter_puncher' || style === 'technician' || style === 'outboxer') ? 0.46 : 0.26;
+    const dodgeSkill = (style === 'counter_puncher' || style === 'technician' || style === 'outboxer') ? 0.48 : 0.28;
     if (r < dodgeSkill * Math.min(1.3, ai.speed)) {
       const dodgeMove = (style === 'peekaboo' || style === 'body_snatcher') ? 'duck' : (Math.random() < 0.6 ? 'lean' : 'duck');
       triggerMove(ai, pl, dodgeMove);
       return;
     } else if (r < 0.68 && ai.blockHp > 25) {
       ai.blocking = true;
-      setTimeout(() => { ai.blocking = false; }, 520);
+      setTimeout(() => { ai.blocking = false; }, 500);
       return;
     }
   }
 
   if (ai.stam < 22) {
     ai.blocking = true;
-    setTimeout(() => { ai.blocking = false; }, 700);
+    setTimeout(() => { ai.blocking = false; }, 650);
     return;
   }
 
-  // Style-specific attack selection
-  let pool = ['jab', 'cross', 'hook', 'body', 'uppercut'];
-  if (style === 'hooker')          pool = ['jab', 'hook', 'hook', 'hook', 'cross'];
-  if (style === 'outboxer')        pool = ['jab', 'jab', 'jab', 'cross', 'lean'];
-  if (style === 'counter_puncher') pool = ['jab', 'lean', 'cross', 'uppercut', 'hook'];
-  if (style === 'technician')      pool = ['jab', 'jab', 'body', 'hook', 'duck', 'cross'];
-  if (style === 'body_snatcher')   pool = ['body', 'body', 'hook', 'uppercut', 'cross'];
-  if (style === 'pressure')        pool = ['jab', 'cross', 'hook', 'hook', 'body', 'uppercut'];
-  if (style === 'sniper')          pool = ['jab', 'jab', 'cross', 'cross', 'uppercut'];
-  if (style === 'peekaboo')        pool = ['duck', 'hook', 'hook', 'uppercut', 'uppercut', 'body'];
+  // Choose attacks appropriate for current distance!
+  if (dist > 170) {
+    // Too far to punch -> step in or feint jab
+    ai.moveDir = -1;
+    return;
+  }
 
-  if (pl.blocking) pool.push('hook', 'hook', 'body');
-  if (pl.state === 'duck') pool.push('uppercut', 'uppercut');
+  let pool = [];
+  if (dist > 125) {
+    // Long range: jabs and crosses
+    pool = ['jab', 'jab', 'cross'];
+    if (style === 'sniper') pool = ['jab', 'cross', 'cross'];
+  } else {
+    // Close/Mid range: full arsenal by style
+    if (style === 'hooker')          pool = ['jab', 'hook', 'hook', 'cross'];
+    else if (style === 'outboxer')   pool = ['jab', 'jab', 'cross', 'lean'];
+    else if (style === 'counter_puncher') pool = ['jab', 'lean', 'cross', 'uppercut', 'hook'];
+    else if (style === 'technician') pool = ['jab', 'body', 'hook', 'duck', 'cross'];
+    else if (style === 'body_snatcher') pool = ['body', 'body', 'hook', 'uppercut'];
+    else if (style === 'pressure')   pool = ['jab', 'cross', 'hook', 'body', 'uppercut'];
+    else if (style === 'sniper')     pool = ['jab', 'cross', 'cross', 'uppercut'];
+    else if (style === 'peekaboo')   pool = ['duck', 'hook', 'hook', 'uppercut', 'body'];
+    else pool = ['jab', 'cross', 'hook', 'body', 'uppercut'];
+  }
+
+  if (pl.blocking) pool.push('hook', 'body');
+  if (pl.state === 'duck' && dist <= 122) pool.push('uppercut', 'uppercut');
 
   const pick = pool[Math.floor(Math.random() * pool.length)];
   triggerMove(ai, pl, pick);
@@ -1915,6 +2294,7 @@ async function pushPvpState(extra = {}) {
     stam: fight.p1.stam,
     blockHp: fight.p1.blockHp,
     blocking: fight.p1.blocking,
+    pos: fight.p1.pos,
     kdCount: fight.p1.totalKd,
     ...extra
   };
@@ -1936,6 +2316,12 @@ async function syncPvpLoop() {
 
     fight.p2.blocking = !!enemyObj.blocking;
     fight.p2.blockHp = enemyObj.blockHp ?? 100;
+    if (typeof enemyObj.pos === 'number') {
+      // Mirror opponent's position so p1 is always on left, p2 on right
+      const targetPos = pvpRole === 'host' ? enemyObj.pos : -enemyObj.pos;
+      fight.p2.pos += (targetPos - fight.p2.pos) * 0.4;
+      clampRingPositions();
+    }
 
     if (enemyObj.hp > 0 && fight.p2.state === 'knocked') {
       fight.p2.state = 'idle';
@@ -1943,8 +2329,8 @@ async function syncPvpLoop() {
       showBanner('СОПЕРНИК ВСТАЛ!', '#fff');
     }
     if (enemyObj.kdCount >= 4) {
-      await fbPatch(`pvp_rooms/${pvpRoomId}`, { status: 'finished', winnerKey: user.key, reason: 'Нокаут в онлайн-бою!' });
-      endFight(true, 'Нокаут в онлайн-бою!');
+      await fbPatch(`pvp_rooms/${pvpRoomId}`, { status: 'finished', winnerKey: user.key, reason: 'Нокаут в рейтинговом бою!' });
+      endFight(true, 'Нокаут в рейтинговом бою!');
       return;
     }
 
@@ -1959,6 +2345,17 @@ async function syncPvpLoop() {
 
 // --- MAIN LOOP ---
 function updateFighter(f, opp, dt) {
+  // Footwork movement
+  if (f.state === 'idle' && f.moveDir !== 0 && f.stam > 2) {
+    const moveSpd = (125 + f.speed * 35) * (f.blocking ? 0.65 : 1.0);
+    f.pos += f.moveDir * moveSpd * (dt / 1000);
+    f.stepPhase += (dt / 1000) * 14;
+    f.stam = Math.max(0, f.stam - (dt / 1000) * 2.2);
+    clampRingPositions();
+  } else {
+    f.stepPhase *= 0.85;
+  }
+
   if (f.state === 'idle' && !f.blocking) {
     f.stam = Math.min(f.maxStam, f.stam + (dt / 1000) * (10 + f.speed * 4));
     f.blockHp = Math.min(100, f.blockHp + (dt / 1000) * 12);
@@ -1973,7 +2370,7 @@ function updateFighter(f, opp, dt) {
     const m = MOVES[f.move];
 
     if (f.state === 'windup') {
-      f.punchExt = -10;
+      f.punchExt = -12;
       if (f.stateTimer <= 0) {
         f.state = 'active';
         f.stateTimer = m ? m.active : 150;
@@ -1983,7 +2380,7 @@ function updateFighter(f, opp, dt) {
         }
       }
     } else if (f.state === 'active') {
-      f.punchExt = m && m.dmg > 0 ? 55 : 0;
+      f.punchExt = m && m.dmg > 0 ? 58 : 0;
       f.punchHeight = m && m.type === 'body' ? 28 : m && m.type === 'upper' ? -25 : -10;
       if (f.stateTimer <= 0) {
         f.state = 'recover';
@@ -2001,10 +2398,14 @@ function updateFighter(f, opp, dt) {
     f.punchExt = 0;
   }
 
-  const targetTilt = f.state === 'lean' ? -28 : f.state === 'duck' ? 14 : f.state === 'hurt' ? -15 : 0;
-  const targetY = f.state === 'duck' ? 36 : f.state === 'knocked' ? 85 : 0;
-  f.headTilt += (targetTilt - f.headTilt) * 0.25;
-  f.yOffset += (targetY - f.yOffset) * 0.25;
+  // Pronounced visible slips (lean back & duck low)
+  const targetTilt = f.state === 'lean' ? -38 : f.state === 'duck' ? 22 : f.state === 'hurt' ? -18 : 0;
+  const targetY = f.state === 'duck' ? 44 : f.state === 'knocked' ? 88 : Math.abs(Math.sin(f.stepPhase)) * -3;
+  const targetSlipX = f.state === 'lean' ? -18 : f.state === 'duck' ? 10 : 0;
+
+  f.headTilt += (targetTilt - f.headTilt) * 0.3;
+  f.yOffset += (targetY - f.yOffset) * 0.3;
+  f.slipShiftX += (targetSlipX - f.slipShiftX) * 0.3;
 }
 
 function gameLoop(ts) {
@@ -2050,6 +2451,8 @@ function gameLoop(ts) {
         fight.p2.stam = fight.p2.maxStam;
         fight.p1.blockHp = 100;
         fight.p2.blockHp = 100;
+        fight.p1.pos = -72;
+        fight.p2.pos = 72;
         showBanner(`РАУНД ${fight.round} — БОЙ!`, '#f59e0b');
       } else {
         const p1Pct = fight.p1.hp / fight.p1.maxHp;
@@ -2061,7 +2464,7 @@ function gameLoop(ts) {
 
     updateFighter(fight.p1, fight.p2, dt);
     updateFighter(fight.p2, fight.p1, dt);
-    if (fight.mode === 'ai') updateAi(dt);
+    if (fight.mode === 'ai' || fight.mode === 'ranked_ai') updateAi(dt);
   }
 
   updateHud();
@@ -2087,6 +2490,27 @@ function updateHud() {
   document.getElementById('hud-p1-blk').style.width = fight.p1.blockHp + '%';
   document.getElementById('hud-p2-stam').style.width = (fight.p2.stam / fight.p2.maxStam) * 100 + '%';
   document.getElementById('hud-p2-blk').style.width = fight.p2.blockHp + '%';
+
+  // Distance indicator
+  const dist = getFightersDist();
+  const distLbl = document.getElementById('hud-dist-label');
+  const distBar = document.getElementById('hud-dist-bar');
+  const pct = Math.min(100, Math.max(10, ((dist - 50) / 220) * 100));
+  distBar.style.width = pct + '%';
+
+  if (dist <= 115) {
+    distLbl.textContent = 'БЛИЖНИЙ БОЙ (ХУКИ/АППЕР)';
+    distLbl.style.color = '#ef4444';
+    distBar.style.background = '#ef4444';
+  } else if (dist <= 170) {
+    distLbl.textContent = 'СРЕДНЯЯ (ДЖЕБ/КРОСС)';
+    distLbl.style.color = '#10b981';
+    distBar.style.background = '#10b981';
+  } else {
+    distLbl.textContent = 'ДАЛЬНЯЯ (ВНЕ УДАРА)';
+    distLbl.style.color = '#60a5fa';
+    distBar.style.background = '#60a5fa';
+  }
 }
 
 // --- CANVAS 2.5D RENDERING ---
@@ -2126,10 +2550,10 @@ function renderRing(dt) {
   floorGrad.addColorStop(1, '#13253d');
   ctx.fillStyle = floorGrad;
   ctx.beginPath();
-  ctx.moveTo(w * 0.12, floorTop);
-  ctx.lineTo(w * 0.88, floorTop);
-  ctx.lineTo(w * 0.98, floorBot);
-  ctx.lineTo(w * 0.02, floorBot);
+  ctx.moveTo(w * 0.10, floorTop);
+  ctx.lineTo(w * 0.90, floorTop);
+  ctx.lineTo(w * 0.99, floorBot);
+  ctx.lineTo(w * 0.01, floorBot);
   ctx.closePath();
   ctx.fill();
 
@@ -2143,8 +2567,8 @@ function renderRing(dt) {
   ctx.textAlign = 'center';
   ctx.fillText('KAPUTKIN GYM', w / 2, (floorTop + floorBot) / 2 + 4);
 
-  const postL = w * 0.13;
-  const postR = w * 0.87;
+  const postL = w * 0.11;
+  const postR = w * 0.89;
   const postTop = h * 0.30;
   ctx.fillStyle = '#334155';
   ctx.fillRect(postL - 6, postTop, 12, floorTop - postTop + 6);
@@ -2167,8 +2591,8 @@ function renderRing(dt) {
   }
 
   const baseY = h * 0.72;
-  drawBoxer(fight.p1, w / 2 - 58, baseY, 1);
-  drawBoxer(fight.p2, w / 2 + 58, baseY, -1);
+  drawBoxer(fight.p1, w / 2 + fight.p1.pos, baseY, 1);
+  drawBoxer(fight.p2, w / 2 + fight.p2.pos, baseY, -1);
 
   for (let i = fight.particles.length - 1; i >= 0; i--) {
     const p = fight.particles[i];
@@ -2210,10 +2634,20 @@ function renderRing(dt) {
 
 function drawBoxer(f, x, y, dir) {
   ctx.save();
+  // Shadow
   ctx.fillStyle = 'rgba(0,0,0,0.45)';
   ctx.beginPath();
   ctx.ellipse(x, y + 6, 36, 10, 0, 0, Math.PI * 2);
   ctx.fill();
+
+  // Slip motion trail when dodging
+  if (f.state === 'lean' || f.state === 'duck') {
+    ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x, y - 55, 52, Math.PI * 0.8, Math.PI * 1.4);
+    ctx.stroke();
+  }
 
   ctx.translate(x, y + f.yOffset);
   ctx.scale(dir, 1);
@@ -2230,19 +2664,20 @@ function drawBoxer(f, x, y, dir) {
     ctx.stroke();
   }
 
-  // Legs
+  // Animated stepping legs
+  const legSwing = Math.sin(f.stepPhase) * 8;
   ctx.strokeStyle = f.skinColor;
   ctx.lineWidth = 11;
   ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(-12, -45); ctx.lineTo(-20, -4);
-  ctx.moveTo(10, -45);  ctx.lineTo(18, -4);
+  ctx.moveTo(-12, -45); ctx.lineTo(-20 - legSwing, -4);
+  ctx.moveTo(10, -45);  ctx.lineTo(18 + legSwing, -4);
   ctx.stroke();
 
   // Boxing boots
   ctx.fillStyle = '#111827';
-  ctx.fillRect(-27, -10, 15, 11);
-  ctx.fillRect(11, -10, 15, 11);
+  ctx.fillRect(-27 - legSwing, -10, 15, 11);
+  ctx.fillRect(11 + legSwing, -10, 15, 11);
 
   // Shorts
   ctx.fillStyle = f.shortsColor;
@@ -2252,9 +2687,9 @@ function drawBoxer(f, x, y, dir) {
   ctx.fillStyle = '#f8fafc';
   ctx.fillRect(-20, -68, 38, 5);
 
-  // Torso
+  // Torso & Head with visible slip shift & angle
   ctx.save();
-  ctx.translate(0, -65);
+  ctx.translate(f.slipShiftX, -65);
   ctx.rotate((f.headTilt * Math.PI) / 180);
 
   ctx.fillStyle = f.skinColor;
@@ -2340,6 +2775,7 @@ function surrenderFight() {
 async function endFight(playerWon, reason) {
   if (!fight.active) return;
   fight.active = false;
+  fight.playerMoveDir = 0;
   if (pvpPollTimer) { clearInterval(pvpPollTimer); pvpPollTimer = null; }
 
   let moneyDelta = 0;
@@ -2357,7 +2793,8 @@ async function endFight(playerWon, reason) {
       user.losses += 1;
     }
   } else {
-    if (pvpRoomId) {
+    // Ranked match (either real player PvP or 60-sec fallback Smart AI)
+    if (fight.mode === 'pvp' && pvpRoomId) {
       await fbPatch(`pvp_rooms/${pvpRoomId}`, {
         status: 'finished',
         winnerKey: playerWon ? user.key : 'opponent',
@@ -2367,13 +2804,14 @@ async function endFight(playerWon, reason) {
       pvpRoomId = null;
     }
     if (playerWon) {
-      moneyDelta = 350;
+      moneyDelta = 400;
       eloDelta = 25;
       user.wins += 1;
-      user.kos += 1;
-      await postSystemChat(`🏆 ${user.name} одержал победу в онлайн-бою! (+25 ELO)`);
+      if (reason.includes('Нокаут')) user.kos += 1;
+      const newRank = getRankInfo(user.elo + eloDelta);
+      await postSystemChat(`🏆 ${user.name} победил в рейтинговом бою! (+25 ELO • ${newRank.icon} ${newRank.name})`);
     } else {
-      moneyDelta = 50;
+      moneyDelta = 60;
       eloDelta = -18;
       user.losses += 1;
     }
